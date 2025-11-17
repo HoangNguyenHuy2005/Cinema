@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tất cả Phim</title>
+    
+    <link rel="stylesheet" href="css/base.css">  <link rel="stylesheet" href="css/phim.css">  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+<header class="main-header">
+        
+        <div class="nav-links">
+            <a href="dat-ve.html">Đặt vé phim chiếu rạp</a>
+            <a href="lich-chieu.html">Lịch chiếu</a>
+            <a href="phim.html">Phim</a>
+            <a href="#" id="rap-modal-trigger" class="dropdown">Rạp <span>&#9662;</span></a>
+        </div>
+
+        <div class="nav-links-center">
+            <a href="index.html">Trang chủ</a>
+        </div>
+
+        <div class="search-user">
+            <div class="search-bar">
+                <input type="text" placeholder="Từ khóa tìm kiếm...">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+            <a href="dang-nhap.html" class="user-icon">
+                <i class="fa-solid fa-user"></i>
+            </a>
+        </div>
+    </header>
+    <main>
+        <section class="all-movies">
+            <h2>Tất cả Phim</h2>
+
+            <div class="filters">
+                <div class="filter-group">
+                    <label for="genre-filter">Lọc theo thể loại:</label>
+                    <select id="genre-filter" name="genre">
+                        <option value="all">Tất cả thể loại</option>
+                        <option value="hanh-dong">Hành động</option>
+                        <option value="tinh-cam">Tình cảm</option>
+                        <option value="kinh-di">Kinh dị</option>
+                        <option value="hai-huoc">Hài hước</option>
+                        <option value="hoat-hinh">Hoạt hình</option>
+                        <option value="khoa-hoc">Khoa học viễn tưởng</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="date-filter">Lọc theo ngày chiếu:</label>
+                    <input type="date" id="date-filter" name="date">
+                </div>
+            </div>
+
+            <div class="movie-grid">
+                <div class="movie-card">
+                    <div class="poster-img">
+                        <img src="https://via.placeholder.com/180x270/FF0000/FFFFFF?text=Nhà+Ma+Xó" alt="Nhà Ma Xó">
+                        <span class="tag-soon">CHIẾU SỚM</span>
+                    </div>
+                    <div class="movie-info">
+                        <h3>Nhà Ma Xó</h3>
+                        <p class="release-date">24/10</p>
+                    </div>
+                    <a href="dat-ve.html?movie=nha-ma-xo" class="buy-ticket-btn">Mua vé</a>
+                </div>
+                <div class="movie-card">
+                    <div class="poster-img">
+                        <img src="https://via.placeholder.com/180x270/008000/FFFFFF?text=Cục+Vàng" alt="Cục Vàng C...">
+                        <span class="rating">92%</span>
+                    </div>
+                    <div class="movie-info">
+                        <h3>Cục Vàng C...</h3>
+                        <p class="release-date">17/10</p>
+                    </div>
+                    <a href="dat-ve.html?movie=cuc-vang" class="buy-ticket-btn">Mua vé</a>
+                </div>
+                <div class="movie-card">
+                    <div class="poster-img">
+                        <img src="https://via.placeholder.com/180x270/87CEEB/000000?text=Gió+Vẫn+Thổi" alt="Gió Vẫn Thổi">
+                    </div>
+                    <div class="movie-info">
+                        <h3>Gió Vẫn Thổi</h3>
+                        <p class="release-date">N/A</p>
+                    </div>
+                    <a href="dat-ve.html?movie=gio-van-thoi" class="buy-ticket-btn">Mua vé</a>
+                </div>
+                <div class="movie-card">
+                    <div class="poster-img">
+                        <img src="https://via.placeholder.com/180x270/FFA500/000000?text=Từ+Chiến+Tr" alt="Từ Chiến Tr...">
+                        <span class="rating">97%</span>
+                    </div>
+                    <div class="movie-info">
+                        <h3>Từ Chiến Trê...</h3>
+                        <p class="release-date">19/09</p>
+                    </div>
+                    <a href="dat-ve.html?movie=tu-chien" class="buy-ticket-btn">Mua vé</a>
+                </div>
+                 <div class="movie-card">
+                    <div class="poster-img">
+                        <img src="https://via.placeholder.com/180x270/FF4500/FFFFFF?text=Tổ+Quốc" alt="Tổ Quốc Trọ...">
+                    </div>
+                    <div class="movie-info">
+                        <h3>Tổ Quốc Trọ...</h3>
+                        <p class="release-date">17/10</p>
+                    </div>
+                    <a href="dat-ve.html?movie=to-quoc" class="buy-ticket-btn">Mua vé</a>
+                </div>
+                <div class="movie-card">
+                    <div class="poster-img">
+                        <img src="https://via.placeholder.com/180x270/4B0082/FFFFFF?text=Trò+Chơi+Ảo" alt="Trò Chơi Ảo...">
+                    </div>
+                    <div class="movie-info">
+                        <h3>Trò Chơi Ảo ...</h3>
+                        <p class="release-date">10/10</p>
+                    </div>
+                    <a href="dat-ve.html?movie=tro-choi-ao" class="buy-ticket-btn">Mua vé</a>
+                </div>
+                </div>
+        </section>
+    </main>
+
+    <script src="js/base.js"></script>
+    <script src="js/phim.js"></script>
+
+<div id="cinema-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button class="modal-close-btn">&times;</button>
+            
+            <div class="modal-header">
+                <div class="modal-search-bar">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" placeholder="Tìm rạp tại">
+                </div>
+                <div class="modal-location-filter">
+                    <input type="text" value="Tp. Hồ Chí Minh">
+                </div>
+            </div>
+            
+            <div class="modal-body">
+                <ul class="cinema-list-modal">
+                    <li>
+                        <img src="https://via.placeholder.com/50/007BFF/FFFFFF?text=B" alt="Beta" class="cinema-logo">
+                        <div class="cinema-details">
+                            <h4>Beta Quang Trung <a href="#" class="map-link">bản đồ</a></h4>
+                            <p class="address">645 Quang Trung, Phường 11, Quận Gò Vấp, Thành phố Hồ Chí Minh</p>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="https://via.placeholder.com/50/007BFF/FFFFFF?text=B" alt="Beta" class="cinema-logo">
+                        <div class="cinema-details">
+                            <h4>Beta Trần Quang Khải <a href="#" class="map-link">bản đồ</a></h4>
+                            <p class="address">Tầng 2 & 3, Tòa nhà IMC, 62 Đường Trần Quang Khải, Phường Tân Định, Quận 1, TP Hồ Chí Minh</p>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="https://via.placeholder.com/50/007BFF/FFFFFF?text=B" alt="Beta" class="cinema-logo">
+                        <div class="cinema-details">
+                            <h4>Beta Ung Văn Khiêm <a href="#" class="map-link">bản đồ</a></h4>
+                            <p class="address">Lầu 1, Tòa nhà PAX SKY, 26 Ung Văn Khiêm, phường 25, Quận Bình Thạnh, thành phố Hồ Chí Minh, Việt Nam</p>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="https://via.placeholder.com/50/A020F0/FFFFFF?text=C" alt="Cinestar" class="cinema-logo">
+                        <div class="cinema-details">
+                            <h4>Cinestar Hai Bà Trưng <a href="#" class="map-link">bản đồ</a></h4>
+                            <p class="address">135 Hai Bà Trưng, P. Bến Nghé, Q.1, Tp. Hồ Chí Minh</p>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="https://via.placeholder.com/50/A020F0/FFFFFF?text=C" alt="Cinestar" class="cinema-logo">
+                        <div class="cinema-details">
+                            <h4>Cinestar Quốc Thanh <a href="#" class="map-link">bản đồ</a></h4>
+                            <p class="address">271 Nguyễn Trãi, P. Nguyễn Cư Trinh, Q.1, Tp. Hồ Chí Minh</p>
+                        </div>
+                    </li>
+                    </ul>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

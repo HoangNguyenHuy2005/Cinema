@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập / Đăng ký</title>
+    
+    <link rel="stylesheet" href="css/base.css">        <link rel="stylesheet" href="css/dang-nhap.css"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+<header class="main-header">
+        
+        <div class="nav-links">
+            <a href="dat-ve.html">Đặt vé phim chiếu rạp</a>
+            <a href="lich-chieu.html">Lịch chiếu</a>
+            <a href="phim.html">Phim</a>
+            <a href="#" id="rap-modal-trigger" class="dropdown">Rạp <span>&#9662;</span></a>
+        </div>
+
+        <div class="nav-links-center">
+            <a href="index.html">Trang chủ</a>
+        </div>
+
+        <div class="search-user">
+            <div class="search-bar">
+                <input type="text" placeholder="Từ khóa tìm kiếm...">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+            <a href="dang-nhap.html" class="user-icon">
+                <i class="fa-solid fa-user"></i>
+            </a>
+        </div>
+    </header>
+    <main>
+        <div class="auth-container">
+            <div class="auth-tabs">
+                <button class="tab-link active" data-form="login">Đăng nhập</button>
+                <button class="tab-link" data-form="register">Đăng ký</button>
+            </div>
+
+            <div class="auth-content">
+                
+                <form id="login" class="auth-form active">
+                    <h2>Chào mừng trở lại!</h2>
+                    <p>Đăng nhập để tiếp tục</p>
+                    
+                    <div class="form-group">
+                        <label for="login-email">Email hoặc Tên đăng nhập</label>
+                        <input type="text" id="login-email" placeholder="Nhập email của bạn..." required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="login-pass">Mật khẩu</label>
+                        <input type="password" id="login-pass" placeholder="Nhập mật khẩu..." required>
+                    </div>
+                    
+                    <a href="#" class="forgot-pass">Quên mật khẩu?</a>
+                    
+                    <button type="submit" class="auth-btn">Đăng nhập</button>
+                    
+                    <div class="social-login">
+                        <p>Hoặc đăng nhập bằng</p>
+                        <div class="social-icons">
+                            <a href="#" class="social-icon"><i class="fab fa-google"></i></a>
+                            <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        </div>
+                    </div>
+                </form>
+
+                <form id="register" class="auth-form">
+                    <h2>Tạo tài khoản mới</h2>
+                    <p>Tham gia với chúng tôi ngay hôm nay!</p>
+                    
+                    <div class="form-group">
+                        <label for="reg-name">Họ và tên</label>
+                        <input type="text" id="reg-name" placeholder="Nhập họ và tên..." required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="reg-email">Email</label>
+                        <input type="email" id="reg-email" placeholder="Nhập email..." required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-pass">Mật khẩu</label>
+                        <input type="password" id="reg-pass" placeholder="Tạo mật khẩu..." required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-pass-confirm">Nhập lại mật khẩu</label>
+                        <input type="password" id="reg-pass-confirm" placeholder="Xác nhận mật khẩu..." required>
+                    </div>
+                    
+                    <div class="terms">
+                        <input type="checkbox" id="terms" required>
+                        <label for="terms">Tôi đồng ý với <a href="#">Điều khoản dịch vụ</a> & <a href="#">Chính sách bảo mật</a>.</label>
+                    </div>
+                    
+                    <button type="submit" class="auth-btn">Đăng ký</button>
+                </form>
+
+            </div>
+        </div>
+    </main>
+
+    <script src="js/base.js"></script>
+    <script src="js/dang-nhap.js"></script>
+<div id="cinema-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button class="modal-close-btn">&times;</button>
+            
+            <div class="modal-header">
+                <div class="modal-search-bar">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" placeholder="Tìm rạp tại">
+                </div>
+                <div class="modal-location-filter">
+                    <input type="text" value="Tp. Hồ Chí Minh">
+                </div>
+            </div>
+            
+            <div class="modal-body">
+                <ul class="cinema-list-modal">
+                    <li>
+                        <img src="https://via.placeholder.com/50/007BFF/FFFFFF?text=B" alt="Beta" class="cinema-logo">
+                        <div class="cinema-details">
+                            <h4>Beta Quang Trung <a href="#" class="map-link">bản đồ</a></h4>
+                            <p class="address">645 Quang Trung, Phường 11, Quận Gò Vấp, Thành phố Hồ Chí Minh</p>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="https://via.placeholder.com/50/007BFF/FFFFFF?text=B" alt="Beta" class="cinema-logo">
+                        <div class="cinema-details">
+                            <h4>Beta Trần Quang Khải <a href="#" class="map-link">bản đồ</a></h4>
+                            <p class="address">Tầng 2 & 3, Tòa nhà IMC, 62 Đường Trần Quang Khải, Phường Tân Định, Quận 1, TP Hồ Chí Minh</p>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="https://via.placeholder.com/50/007BFF/FFFFFF?text=B" alt="Beta" class="cinema-logo">
+                        <div class="cinema-details">
+                            <h4>Beta Ung Văn Khiêm <a href="#" class="map-link">bản đồ</a></h4>
+                            <p class="address">Lầu 1, Tòa nhà PAX SKY, 26 Ung Văn Khiêm, phường 25, Quận Bình Thạnh, thành phố Hồ Chí Minh, Việt Nam</p>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="https://via.placeholder.com/50/A020F0/FFFFFF?text=C" alt="Cinestar" class="cinema-logo">
+                        <div class="cinema-details">
+                            <h4>Cinestar Hai Bà Trưng <a href="#" class="map-link">bản đồ</a></h4>
+                            <p class="address">135 Hai Bà Trưng, P. Bến Nghé, Q.1, Tp. Hồ Chí Minh</p>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="https://via.placeholder.com/50/A020F0/FFFFFF?text=C" alt="Cinestar" class="cinema-logo">
+                        <div class="cinema-details">
+                            <h4>Cinestar Quốc Thanh <a href="#" class="map-link">bản đồ</a></h4>
+                            <p class="address">271 Nguyễn Trãi, P. Nguyễn Cư Trinh, Q.1, Tp. Hồ Chí Minh</p>
+                        </div>
+                    </li>
+                    </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

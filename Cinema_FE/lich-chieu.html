@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch chiếu - Bán vé xem phim</title>
+    
+    <link rel="stylesheet" href="css/base.css">         <link rel="stylesheet" href="css/lich-chieu.css"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+<header class="main-header">
+        
+        <div class="nav-links">
+            <a href="dat-ve.html">Đặt vé phim chiếu rạp</a>
+            <a href="lich-chieu.html">Lịch chiếu</a>
+            <a href="phim.html">Phim</a>
+            <a href="#" id="rap-modal-trigger" class="dropdown">Rạp <span>&#9662;</span></a>
+        </div>
+
+        <div class="nav-links-center">
+            <a href="index.html">Trang chủ</a>
+        </div>
+
+        <div class="search-user">
+            <div class="search-bar">
+                <input type="text" placeholder="Từ khóa tìm kiếm...">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+            <a href="dang-nhap.html" class="user-icon">
+                <i class="fa-solid fa-user"></i>
+            </a>
+        </div>
+    </header>
+    <main>
+        <div class="page-title-bar">
+            <h2>Lịch chiếu</h2>
+            <p>Tìm lịch chiếu phim / rạp nhanh nhất với chỉ 1 bước!</p>
+        </div>
+
+        <div class="booking-container-wrapper">
+            <div class="booking-container">
+                
+                <div class="area-list">
+                    <ul>
+                        <li><a href="#" class="area-link active">Tp. Hồ Chí Minh <span>69</span></a></li>
+                        <li><a href="#" class="area-link">Hà Nội <span>52</span></a></li>
+                        <li><a href="#" class="area-link">Đà Nẵng <span>9</span></a></li>
+                        <li><a href="#" class="area-link">Đồng Nai <span>9</span></a></li>
+                        <li><a href="#" class="area-link">Cần Thơ <span>6</span></a></li>
+                        <li><a href="#" class="area-link">Bình Dương <span>10</span></a></li>
+                        <li><a href="#" class="area-link">Bình Phước <span>6</span></a></li>
+                        <li><a href="#" class="area-link">Bình Thuận <span>1</span></a></li>
+                        <li><a href="#" class="area-link">Bà Rịa - Vũng Tàu <span>7</span></a></li>
+                        <li><a href="#" class="area-link">An Giang <span>3</span></a></li>
+                    </ul>
+                </div>
+
+                <div class="cinema-list">
+                    <ul>
+                        <li>
+                            <h4><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRseotWBMcaG1xNOFKYQiqQEslqbfBgDKfbCg&s" alt="Beta"> Beta Cinemas</h4>
+                            <ul class="cinema-locations">
+                                <li><a href="#" class="cinema-link active">Beta Quang Trung</a></li>
+                                <li><a href="#" class="cinema-link">Beta Trần Quang Khải</a></li>
+                                <li><a href="#" class="cinema-link">Beta Ung Văn Khiêm</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <h4><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5_G2csGPSein6_xMQ0LRVFZB32lfRDmD4Pw&s" alt="Cine"> Cinestar</h4>
+                            <ul class="cinema-locations">
+                                <li><a href="#" class="cinema-link">Cinestar Hai Bà Trưng</a></li>
+                                <li><a href="#" class="cinema-link">Cinestar Quốc Thanh</a></li>
+                                <li><a href="#" class="cinema-link">Cinestar Sátra Quận 6</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <h4><img src="https://play-lh.googleusercontent.com/13niUTsOUjEP_9SYPLyjznAA67ckOp0VvqJBQSZvLaEv_024VxWXyU7vEIOuWsMFBBo" alt="Dcine"> Dcine</h4>
+                            <ul class="cinema-locations">
+                                <li><a href="#" class="cinema-link">DCINE Bến Thành</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <h4><img src="https://ddcinema.vn/Content/Img/logo.png" alt="DongDa"> Đống Đa Cinema</h4>
+                            <ul class="cinema-locations">
+                                </ul>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="showtime-list">
+                    <div class="date-picker">
+                        <ul>
+                            <li><a href="#" class="date-link active"><span>5/11</span><span>Th 4</span></a></li>
+                            <li><a href="#" class="date-link"><span>6/11</span><span>Th 5</span></a></li>
+                            <li><a href="#" class="date-link"><span>7/11</span><span>Th 6</span></a></li>
+                            <li><a href="#" class="date-link"><span>8/11</span><span>Th 7</span></a></li>
+                            <li><a href="#" class="date-link"><span>9/11</span><span>CN</span></a></li>
+                            <li><a href="#" class="date-link"><span>10/11</span><span>Th 2</span></a></li>
+                        </ul>
+                    </div>
+
+                    <div class="info-box">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        Nhấn vào suất chiếu để tiếp tục hành vi mua vé
+                    </div>
+
+                    <div class="cinema-showtime-list">
+                        <div class="listing-header">
+                            <h3>Beta Quang Trung</h3>
+                            <span class="show-date">Thứ Tư, 05/11/2025</span>
+                            <p class="cinema-address">645 Quang Trung, Phường 11, Quận Gò Vấp, Thành phố Hồ Chí Minh - <a href="#">Bản đồ</a></p>
+                        </div>
+
+                        <div class="movie-showtime-item sponsored">
+                            <div class="poster">
+                                <img src="https://cdn.moveek.com/storage/media/cache/tall/68ecd02361129538851095.png" alt="poster">
+                            </div>
+                            <div class="details">
+                                <span class="tag-sponsored">Được tài trợ</span>
+                                <h4>Phá Đảo Sinh Nhật Mẹ</h4>
+                                <p class="specs">Spoiled: Mom's Birthday Party - T16 - 1h 31' | <a href="#" class="trailer-link">Trailer</a></p>
+                                <p class="specs">Drama, Family</p>
+
+                                <div class="format-block">
+                                    <strong>2D Phụ Đề Anh</strong>
+                                    <div class="times">
+                                        <a href="#" class="time-slot"><span>08:50</span><span>50K</span></a>
+                                        <a href="#" class="time-slot"><span>12:40</span><span>60K</span></a>
+                                        <a href="#" class="time-slot"><span>16:10</span><span>60K</span></a>
+                                        <a href="#" class="time-slot"><span>18:00</span><span>70K</span></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="movie-showtime-item">
+                            <div class="poster">
+                                <img src="https://www.cgv.vn/media/catalog/product/cache/1/image/1800x/71252117777b696995f01934522c402d/c/_/c_i_m_-_official_poster_-_kc_31102025.jpg" alt="poster">
+                            </div>
+                            <div class="details">
+                                <h4>Cải Mả</h4>
+                                <p class="specs">Where It Began - T16 - 1h 55' | <a href="#" class="trailer-link">Trailer</a></p>
+                                <p class="specs">Horror</p>
+
+                                <div class="format-block">
+                                    <strong>2D Phụ Đề Anh</strong>
+                                    <div class="times">
+                                        <a href="#" class="time-slot"><span>08:15</span><span>50K</span></a>
+                                        <a href="#" class="time-slot"><span>08:45</span><span>50K</span></a>
+                                        <a href="#" class="time-slot"><span>09:40</span><span>50K</span></a>
+                                        <a href="#" class="time-slot"><span>11:20</span><span>60K</span></a>
+                                        <a href="#" class="time-slot"><span>12:00</span><span>60K</span></a>
+                                        <a href="#" class="time-slot"><span>13:40</span><span>60K</span></a>
+                                        <a href="#" class="time-slot"><span>14:30</span><span>60K</span></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <script src="js/base.js"></script>
+    <script src="js/lich-chieu.js"></script>
+
+<div id="cinema-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button class="modal-close-btn">&times;</button>
+            
+            <div class="modal-header">
+                <div class="modal-search-bar">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" placeholder="Tìm rạp tại">
+                </div>
+                <div class="modal-location-filter">
+                    <input type="text" value="Tp. Hồ Chí Minh">
+                </div>
+            </div>
+            
+            <div class="modal-body">
+                <ul class="cinema-list-modal">
+                    <li>
+                        <img src="https://via.placeholder.com/50/007BFF/FFFFFF?text=B" alt="Beta" class="cinema-logo">
+                        <div class="cinema-details">
+                            <h4>Beta Quang Trung <a href="#" class="map-link">bản đồ</a></h4>
+                            <p class="address">645 Quang Trung, Phường 11, Quận Gò Vấp, Thành phố Hồ Chí Minh</p>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="https://via.placeholder.com/50/007BFF/FFFFFF?text=B" alt="Beta" class="cinema-logo">
+                        <div class="cinema-details">
+                            <h4>Beta Trần Quang Khải <a href="#" class="map-link">bản đồ</a></h4>
+                            <p class="address">Tầng 2 & 3, Tòa nhà IMC, 62 Đường Trần Quang Khải, Phường Tân Định, Quận 1, TP Hồ Chí Minh</p>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="https://via.placeholder.com/50/007BFF/FFFFFF?text=B" alt="Beta" class="cinema-logo">
+                        <div class="cinema-details">
+                            <h4>Beta Ung Văn Khiêm <a href="#" class="map-link">bản đồ</a></h4>
+                            <p class="address">Lầu 1, Tòa nhà PAX SKY, 26 Ung Văn Khiêm, phường 25, Quận Bình Thạnh, thành phố Hồ Chí Minh, Việt Nam</p>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="https://via.placeholder.com/50/A020F0/FFFFFF?text=C" alt="Cinestar" class="cinema-logo">
+                        <div class="cinema-details">
+                            <h4>Cinestar Hai Bà Trưng <a href="#" class="map-link">bản đồ</a></h4>
+                            <p class="address">135 Hai Bà Trưng, P. Bến Nghé, Q.1, Tp. Hồ Chí Minh</p>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="https://via.placeholder.com/50/A020F0/FFFFFF?text=C" alt="Cinestar" class="cinema-logo">
+                        <div class="cinema-details">
+                            <h4>Cinestar Quốc Thanh <a href="#" class="map-link">bản đồ</a></h4>
+                            <p class="address">271 Nguyễn Trãi, P. Nguyễn Cư Trinh, Q.1, Tp. Hồ Chí Minh</p>
+                        </div>
+                    </li>
+                    </ul>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

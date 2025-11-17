@@ -1,0 +1,48 @@
+/* --- Now Showing Section (index.html) --- */
+.now-showing {
+    width: 90%;
+    max-width: 1300px;
+    margin: 30px auto;
+}
+
+.now-showing h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: #000;
+}
+
+.movie-carousel {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding-bottom: 20px;
+    
+    /* Tắt thanh cuộn */
+    scrollbar-width: none;  /* Firefox */
+    &::-webkit-scrollbar { 
+        display: none; /* Chrome/Safari */
+    }
+
+    /* Thêm hành vi cuộn mượt và snap */
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+}
+
+.slider-dots {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: #ccc;
+    border-radius: 50%;
+    margin: 0 4px;
+    cursor: pointer;
+}
+
+.dot.active {
+    background-color: #555;
+}

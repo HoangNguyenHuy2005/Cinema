@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="admin-wrapper">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>Admin Panel</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#" class="nav-link active" data-content="dashboard"><i class="fa-solid fa-chart-line"></i> Thống kê</a></li>
+                    <li><a href="#" class="nav-link" data-content="movies"><i class="fa-solid fa-film"></i> Quản lý Phim</a></li>
+                    <li><a href="#" class="nav-link" data-content="showtimes"><i class="fa-solid fa-calendar-days"></i> Quản lý Rạp & Suất chiếu</a></li>
+                    <li><a href="#" class="nav-link" data-content="bookings"><i class="fa-solid fa-ticket"></i> Quản lý Đơn hàng</a></li>
+                    <li><a href="#" class="nav-link" data-content="users"><i class="fa-solid fa-users"></i> Quản lý Người dùng</a></li>
+                    <li><a href="#" class="nav-link" data-content="promos"><i class="fa-solid fa-percent"></i> Quản lý Khuyến mãi</a></li>
+                    <li><a href="admin-login.html" class="nav-link logout"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <div class="main-content">
+            <header class="admin-header">
+                <h2>Xin chào, Admin!</h2>
+                <div class="admin-profile">
+                    <img src="https://via.placeholder.com/40" alt="Admin Avatar">
+                    <span>Nguyễn Huy Hoàng</span>
+                </div>
+            </header>
+
+            <main class="content-area">
+                
+                <section id="dashboard" class="content-section active">
+                    <h3>Dashboard Thống kê</h3>
+                    <div class="summary-cards">
+                        <div class="card">
+                            <h4>Doanh thu hôm nay</h4>
+                            <p>50.000.000đ</p>
+                            <span><i class="fa-solid fa-arrow-up"></i> 15%</span>
+                        </div>
+                        <div class="card">
+                            <h4>Vé đã bán</h4>
+                            <p>520</p>
+                            <span><i class="fa-solid fa-arrow-up"></i> 10%</span>
+                        </div>
+                        <div class="card">
+                            <h4>Người dùng mới</h4>
+                            <p>85</p>
+                            <span><i class="fa-solid fa-arrow-up"></i> 5%</span>
+                        </div>
+                        <div class="card">
+                            <h4>Suất chiếu hôm nay</h4>
+                            <p>150</p>
+                            <span>...</span>
+                        </div>
+                    </div>
+                    <h4>Đơn hàng gần đây</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mã đơn</th>
+                                <th>Email</th>
+                                <th>Phim</th>
+                                <th>Tổng tiền</th>
+                                <th>Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#12345</td>
+                                <td>user@email.com</td>
+                                <td>Phá Đảo Sinh Nhật Mẹ</td>
+                                <td>150.000đ</td>
+                                <td><span class="status paid">Đã thanh toán</span></td>
+                            </tr>
+                            <tr>
+                                <td>#12344</td>
+                                <td>user2@email.com</td>
+                                <td>Cái Ma</td>
+                                <td>100.000đ</td>
+                                <td><span class="status paid">Đã thanh toán</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section id="movies" class="content-section">
+                    <h3>Quản lý Phim</h3>
+                    <button class="add-new-btn"><i class="fa-solid fa-plus"></i> Thêm phim mới</button>
+                    </section>
+                
+                <section id="showtimes" class="content-section">
+                    <h3>Quản lý Rạp & Suất chiếu</h3>
+                    <button class="add-new-btn"><i class="fa-solid fa-plus"></i> Thêm suất chiếu mới</button>
+                    </section>
+                
+                <section id="bookings" class="content-section">
+                    <h3>Quản lý Đơn hàng</h3>
+                    </section>
+                
+                <section id="users" class="content-section">
+                    <h3>Quản lý Người dùng</h3>
+                    </section>
+
+                <section id="promos" class="content-section">
+                    <h3>Quản lý Khuyến mãi</h3>
+                    <button class="add-new-btn"><i class="fa-solid fa-plus"></i> Thêm mã khuyến mãi</button>
+                    </section>
+
+            </main>
+        </div>
+    </div>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>

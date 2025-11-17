@@ -1,0 +1,48 @@
+/* --- Styles for 'phim.html' --- */
+.all-movies {
+    width: 90%;
+    max-width: 1300px;
+    margin: 30px auto;
+}
+
+.all-movies h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: #000;
+}
+
+.filters {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 30px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-group label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #555;
+}
+
+.filter-group select,
+.filter-group input[type="date"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+/* Sử dụng Grid cho trang 'Tất cả phim' */
+.movie-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 20px;
+}

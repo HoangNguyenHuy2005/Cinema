@@ -1,0 +1,177 @@
+/* === CSS CHO ADMIN-DASHBOARD.HTML === */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+}
+
+.admin-wrapper {
+    display: flex;
+}
+
+/* --- Sidebar --- */
+.sidebar {
+    width: 250px;
+    background-color: #1e293b; /* Màu xanh đen */
+    color: #e2e8f0;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.sidebar-header {
+    padding: 20px;
+    text-align: center;
+    font-size: 1.5rem;
+    border-bottom: 1px solid #334155;
+}
+
+.sidebar-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-nav .nav-link {
+    display: block;
+    padding: 15px 20px;
+    color: #e2e8f0;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.sidebar-nav .nav-link i {
+    margin-right: 10px;
+    width: 20px;
+}
+
+.sidebar-nav .nav-link:hover,
+.sidebar-nav .nav-link.active {
+    background-color: #334155;
+    color: white;
+}
+
+.sidebar-nav .nav-link.logout {
+    margin-top: 30px;
+    color: #f87171; /* Màu đỏ */
+}
+
+/* --- Main Content --- */
+.main-content {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+}
+
+.admin-header {
+    background-color: #ffffff;
+    padding: 20px 30px;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.admin-header h2 {
+    margin: 0;
+    color: #333;
+}
+
+.admin-profile {
+    display: flex;
+    align-items: center;
+}
+
+.admin-profile img {
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+/* --- Content Area --- */
+.content-area {
+    padding: 30px;
+}
+
+/* Ẩn tất cả nội dung section theo mặc định */
+.content-section {
+    display: none;
+}
+
+/* Hiển thị section có class 'active' */
+.content-section.active {
+    display: block;
+}
+
+/* --- Kiểu dáng cho Dashboard (Ví dụ) --- */
+.summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+.card h4 {
+    margin-top: 0;
+    color: #666;
+    font-size: 0.9rem;
+}
+.card p {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #1e293b;
+    margin: 5px 0;
+}
+.card span {
+    font-size: 0.9rem;
+    color: #10b981; /* Màu xanh lá */
+}
+
+/* Table styles */
+.content-area table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 30px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.content-area th, .content-area td {
+    padding: 12px 15px;
+    border: 1px solid #e0e0e0;
+    text-align: left;
+}
+
+.content-area th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+.status.paid {
+    background-color: #d1fae5;
+    color: #065f46;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+}
+
+/* Nút chung */
+.add-new-btn {
+    background-color: #e00b0f;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+.add-new-btn:hover {
+    background-color: #b8090d;
+}

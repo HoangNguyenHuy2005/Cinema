@@ -1,0 +1,310 @@
+/* === CSS CHO TRANG LICH-CHIEU.HTML === */
+
+/* --- Thanh Tiêu Đề --- */
+.page-title-bar {
+    background-image: url('https://via.placeholder.com/1920x200/000000/FFFFFF?text=Movie+Collage+Banner');
+    background-size: cover;
+    background-position: center;
+    padding: 40px 0;
+    text-align: center;
+    color: white;
+}
+
+.page-title-bar h2 {
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.page-title-bar p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+/* --- Wrapper cho khung 3 cột --- */
+.booking-container-wrapper {
+    width: 90%;
+    max-width: 1300px;
+    margin: -50px auto 30px auto; /* Kéo lên trên banner */
+    position: relative;
+    z-index: 2;
+}
+
+/* --- Khung 3 Cột (Giống dat-ve.css) --- */
+.booking-container {
+    display: grid;
+    grid-template-columns: 250px 300px 1fr;
+    gap: 20px;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    min-height: 700px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+/* Cột 1: Khu vực (Giống dat-ve.css) */
+.area-list {
+    border-right: 1px solid #f0f0f0;
+}
+
+.area-list ul {
+    list-style: none;
+}
+
+.area-list .area-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    color: #333;
+    transition: background-color 0.2s;
+}
+
+.area-list .area-link:hover {
+    background-color: #f5f5f5;
+}
+
+.area-list .area-link.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.area-list .area-link span {
+    background-color: #eee;
+    color: #555;
+    font-size: 0.8rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.area-list .area-link.active span {
+    background-color: white;
+    color: #007bff;
+}
+
+/* Cột 2: Danh sách rạp (Giống dat-ve.css) */
+.cinema-list {
+    border-right: 1px solid #f0f0f0;
+    padding: 0 20px;
+    max-height: 700px;
+    overflow-y: auto;
+}
+
+.cinema-list h4 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+    margin-top: 15px;
+}
+
+.cinema-list h4 img {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+}
+
+.cinema-list .cinema-locations {
+    list-style: none;
+    padding-left: 15px;
+    margin-top: 10px;
+}
+
+.cinema-list .cinema-link {
+    display: block;
+    padding: 10px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.cinema-list .cinema-link:hover {
+    background-color: #f5f5f5;
+}
+
+.cinema-list .cinema-link.active {
+    background-color: #f0f0f0;
+    font-weight: bold;
+    color: #e00b0f;
+}
+
+/* Cột 3: Lịch chiếu (Styles MỚI và Tái sử dụng) */
+.showtime-list .date-picker ul {
+    display: flex;
+    list-style: none;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+
+.showtime-list .date-link {
+    display: block;
+    padding: 10px;
+    text-align: center;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    min-width: 60px;
+    border: 1px solid #ddd;
+}
+
+.showtime-list .date-link span {
+    display: block;
+}
+
+.showtime-list .date-link.active {
+    border-color: #e00b0f;
+    border-width: 2px;
+    font-weight: bold;
+    color: #e00b0f;
+}
+
+.info-box {
+    background-color: #fff8e1;
+    border: 1px solid #ffecb3;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: #665c3e;
+}
+
+.info-box i {
+    margin-right: 8px;
+    color: #f57f17;
+}
+
+.cinema-showtime-list {
+    margin-top: 20px;
+}
+
+.cinema-showtime-list .listing-header {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.listing-header h3 {
+    font-size: 1.2rem;
+    color: #000;
+}
+.listing-header .show-date {
+    font-weight: bold;
+    color: #e00b0f;
+    font-size: 0.9rem;
+}
+.listing-header .cinema-address {
+    font-size: 0.85rem;
+    color: #555;
+    margin-top: 4px;
+}
+.listing-header .cinema-address a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+/* --- Kiểu dáng MỚI cho mục phim --- */
+.movie-showtime-item {
+    display: flex;
+    gap: 15px;
+    padding: 20px 0;
+    border-bottom: 1px solid #eee;
+}
+/* Hiển thị viền đỏ cho phim được tài trợ */
+.movie-showtime-item.sponsored {
+    border: 1px solid #e00b0f;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 15px;
+    background-color: #fffafa;
+}
+
+.movie-showtime-item .poster {
+    flex-shrink: 0;
+}
+
+.movie-showtime-item .poster img {
+    width: 100px;
+    height: 150px;
+    border-radius: 4px;
+}
+
+.movie-showtime-item .details {
+    flex-grow: 1;
+}
+
+.tag-sponsored {
+    display: inline-block;
+    background-color: #fff0f0;
+    color: #e00b0f;
+    border: 1px solid #e00b0f;
+    padding: 2px 8px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    border-radius: 4px;
+    margin-bottom: 5px;
+}
+
+.details h4 {
+    font-size: 1.1rem;
+    color: #000;
+}
+
+.details .specs {
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 4px;
+}
+
+.details .trailer-link {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.format-block {
+    margin-top: 15px;
+}
+
+.format-block strong {
+    font-size: 0.95rem;
+    color: #333;
+}
+
+.format-block .times {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.times .time-slot {
+    display: block;
+    border: 1px solid #ccc;
+    padding: 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    color: #333;
+    transition: all 0.2s;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.times .time-slot span {
+    display: block;
+}
+
+/* Giá vé (chữ nhỏ hơn) */
+.times .time-slot span:last-child {
+    font-size: 0.8rem;
+    font-weight: normal;
+    color: #555;
+}
+
+.times .time-slot:hover {
+    background-color: #e00b0f;
+    color: white;
+    border-color: #e00b0f;
+}
+
+.times .time-slot:hover span:last-child {
+    color: white;
+}

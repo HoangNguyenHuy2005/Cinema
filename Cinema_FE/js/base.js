@@ -1,54 +1,47 @@
-/* === LOGIC CHUNG CHO MỌI TRANG === */
-
+// js/base.js
 document.addEventListener('DOMContentLoaded', () => {
-
     console.log("Base scripts loaded.");
 
-    // --- Logic cho nút Người dùng ---
+    // --- Xử lý trạng thái đăng nhập ---
     const userIcon = document.querySelector('.user-icon');
-    
-    // **QUAN TRỌNG: Đọc trạng thái đăng nhập từ localStorage**
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const token = localStorage.getItem('accessToken');
+    const userRole = localStorage.getItem('userRole');
 
     if (userIcon) {
-        if (isLoggedIn) {
-            // NẾU ĐÃ ĐĂNG NHẬP: Biến nút này thành nút ĐĂNG XUẤT
-            userIcon.href = "#"; // Bỏ link đến trang đăng nhập
+        if (token) {
+            // Đã đăng nhập -> Click để Đăng xuất
+            userIcon.setAttribute('href', '#'); // Ngăn chuyển trang
+            userIcon.innerHTML = '<i class="fa-solid fa-right-from-bracket"></i>'; // Đổi icon thành logout
+            
+            // Thêm tooltip hoặc title nếu muốn
+            userIcon.title = "Đăng xuất";
 
-            userIcon.addEventListener('click', (event) => {
-                event.preventDefault(); 
-                
-                // Hỏi người dùng có muốn đăng xuất không
+            userIcon.addEventListener('click', (e) => {
+                e.preventDefault();
                 if (confirm('Bạn có muốn đăng xuất không?')) {
-                    // Xóa trạng thái khỏi localStorage
-                    localStorage.removeItem('isLoggedIn');
-                    localStorage.removeItem('userName');
-                    
-                    alert('Đã đăng xuất.');
-                    
-                    // Tải lại trang để cập nhật header
+                    localStorage.removeItem('accessToken');
+                    localStorage.removeItem('userRole');
+                    alert('Đã đăng xuất thành công!');
                     window.location.href = 'index.html';
                 }
             });
-
         } else {
-            // NẾU CHƯA ĐĂNG NHẬP: Giữ nguyên hành vi
-            // (Không cần làm gì, nút sẽ tự động trỏ đến dang-nhap.html)
-            console.log('Người dùng chưa đăng nhập.');
+            // Chưa đăng nhập -> Giữ nguyên link đến dang-nhap.html
+            console.log('Chưa đăng nhập');
         }
     }
 
-
-    /* === LOGIC CHO MODAL RẠP (Giữ nguyên) === */
+    // --- Logic Modal Rạp (Giữ nguyên) ---
     const rapTriggerButton = document.getElementById('rap-modal-trigger');
     const cinemaModal = document.getElementById('cinema-modal');
-    
+
     if (rapTriggerButton && cinemaModal) {
         const closeModalButton = cinemaModal.querySelector('.modal-close-btn');
 
         rapTriggerButton.addEventListener('click', (e) => {
-            e.preventDefault(); 
+            e.preventDefault();
             cinemaModal.classList.remove('hidden');
+            // Có thể gọi API load danh sách rạp tại đây nếu cần: loadTheaters()
         });
 
         if (closeModalButton) {
@@ -63,5 +56,4 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
 });

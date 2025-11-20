@@ -7,7 +7,7 @@ class Config:
     # --- Cấu hình Database MySQL ---
     SQLALCHEMY_DATABASE_URI = os.getenv(
         "DATABASE_URL",
-        "mysql+pymysql://root:Huy20055555@localhost/movieDB?charset=utf8mb4"
+        "mysql+pymysql://root:princesama2005@localhost/movieDB?charset=utf8mb4"
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 

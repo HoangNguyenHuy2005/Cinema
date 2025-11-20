@@ -13,9 +13,11 @@ from booking_routes import booking_bp
 from models import db, User, Movie, Cinema, Room, Schedule, Seat, ScheduleSeat
 from werkzeug.security import generate_password_hash
 from datetime import datetime, timedelta 
+from flask_cors import CORS
 # Note: Cần thêm 'db' vào import list nếu chưa có.
 
 app = Flask(__name__)
+CORS(app)
 app.config.from_object(Config)
 
 # Khởi tạo DB và JWT

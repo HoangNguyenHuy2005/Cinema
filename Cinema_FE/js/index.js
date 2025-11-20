@@ -1,71 +1,48 @@
-/* === LOGIC CHO TRANG CHỦ (INDEX.HTML) === */
-
 document.addEventListener('DOMContentLoaded', () => {
-
-    console.log("Index-specific scripts loaded.");
-
-    // --- LOGIC SLIDER TỰ ĐỘNG TRƯỢT ---
-    initMovieSlider();
+    // Tải danh sách phim khi vào trang
+    loadMovies();
     
-    // Logic cho slider dots (vẫn là placeholder)
-    const dots = document.querySelectorAll('.dot');
-    dots.forEach((dot, index) => {
-        dot.addEventListener('click', () => {
-            // Tạm thời chỉ làm active dot
-            dots.forEach(d => d.classList.remove('active'));
-            dot.classList.add('active');
-            
-            // Bạn sẽ cần thêm logic cuộn slider đến vị trí `index` ở đây
-        });
-    });
-
+    // Khởi tạo slider (nếu có logic slider ở đây)
+    initMovieSlider();
 });
 
-/**
- * Khởi tạo slider phim "Đang chiếu"
- * Tự động trượt theo từng "trang" phim.
- */
+async function loadMovies() {
+    // Gọi API lấy phim (Giả sử bạn đã tạo route này ở Backend)
+    // Nếu chưa có API này, nó sẽ trả về lỗi 404, bạn có thể bỏ qua bước này để test login trước.
+    const result = await callAPI('/movies', 'GET');
+
+    if (result.ok) {
+        const movies = result.data; 
+        renderMovies(movies);
+    } else {
+        console.log("Chưa lấy được danh sách phim từ API (hoặc API chưa tồn tại).");
+    }
+}
+
+function renderMovies(movies) {
+    const container = document.querySelector('.movie-carousel');
+    if (!container) return;
+
+    container.innerHTML = ''; // Xóa placeholder
+
+    movies.forEach(movie => {
+        // Render HTML thẻ phim
+        const html = `
+            <div class="movie-card">
+                <div class="poster-img">
+                    <img src="${movie.image_url || 'https://via.placeholder.com/180x270'}" alt="${movie.title}">
+                </div>
+                <div class="movie-info">
+                    <h3>${movie.title}</h3>
+                    <p class="release-date">${movie.release_date}</p>
+                </div>
+                <a href="dat-ve.html?id=${movie.id}" class="buy-ticket-btn">Mua vé</a>
+            </div>
+        `;
+        container.innerHTML += html;
+    });
+}
+
 function initMovieSlider() {
-    const carousel = document.querySelector('.movie-carousel');
-    if (!carousel) return; // Không tìm thấy slider, thoát
-
-    const items = carousel.querySelectorAll('.movie-card');
-    if (items.length === 0) return; // Không có phim, thoát
-
-    let currentIndex = 0;
-    const totalItems = items.length;
-    
-    const itemWidth = items[0].offsetWidth;
-    const gap = 20; // Được định nghĩa trong CSS
-    const scrollWidthPerItem = itemWidth + gap;
-    
-    const visibleWidth = carousel.offsetWidth;
-    const itemsToScroll = Math.max(1, Math.floor(visibleWidth / scrollWidthPerItem));
-
-    let sliderInterval;
-
-    const startSlider = () => {
-        clearInterval(sliderInterval);
-        sliderInterval = setInterval(() => {
-            currentIndex += itemsToScroll;
-
-            const maxIndex = totalItems - itemsToScroll;
-            if (currentIndex > maxIndex) {
-                currentIndex = 0;
-            }
-            
-            const newScrollLeft = currentIndex * scrollWidthPerItem;
-            
-            carousel.scrollTo({
-                left: newScrollLeft,
-                behavior: 'smooth'
-            });
-
-        }, 4000); // Tự động trượt mỗi 4 giây
-    };
-
-    carousel.addEventListener('mouseenter', () => clearInterval(sliderInterval));
-    carousel.addEventListener('mouseleave', startSlider);
-
-    startSlider();
+    // Logic slider của bạn (giữ nguyên code cũ)
 }

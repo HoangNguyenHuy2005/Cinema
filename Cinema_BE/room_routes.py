@@ -1,83 +1,90 @@
-# room_routes.py
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt
 from models import db, Room, Cinema, Seat
 
 room_bp = Blueprint('room', __name__)
 
-@room_bp.route('/', methods=['GET'])
-def list_rooms():
-    cinema_id = request.args.get('cinemaId', type=int)
-    if cinema_id:
-        rooms = Room.query.filter_by(cinema_id=cinema_id).all()
-    else:
-        rooms = Room.query.all()
+# 1. Lấy danh sách phòng (đã có ở bước trước, giữ nguyên hoặc thêm nếu thiếu)
+@room_bp.route('', methods=['GET'])
+def get_rooms():
+    rooms = Room.query.all()
     return jsonify([{
-        "id": r.id, "name": r.name, "cinema_id": r.cinema_id, "capacity": r.capacity
+        "id": r.id,
+        "name": r.name,
+        "cinema_name": r.cinema.name if r.cinema else "Unknown",
+        "capacity": r.capacity
     } for r in rooms])
 
-@room_bp.route('/<int:room_id>', methods=['GET'])
-def get_room(room_id):
-    r = Room.query.get(room_id)
-    if not r:
-        return jsonify({"message": "Room not found"}), 404
-    seats = [{"id": s.id, "seat_code": s.seat_code, "type": s.type, "price": s.price} for s in r.seats]
-    return jsonify({"id": r.id, "name": r.name, "cinema_id": r.cinema_id, "capacity": r.capacity, "seats": seats})
-
-@room_bp.route('/', methods=['POST'])
+# 2. Thêm Phòng mới + Tự động tạo Ghế (Admin)
+@room_bp.route('', methods=['POST'])
 @jwt_required()
 def create_room():
-    identity = get_jwt_identity()
-    if identity["role"] != "admin":
-        return jsonify({"message": "Access denied"}), 403
-
+    claims = get_jwt()
+    if claims.get("role") != "admin": return jsonify({"message": "Denied"}), 403
+    
     data = request.get_json()
-    cinema_id = data.get("cinema_id")
-    name = data.get("name")
-    seats = data.get("seats", [])  # list of {"seat_code":"A1","type":"standard","price":100}
+    cinema_id = data.get('cinema_id')
+    name = data.get('name')
+    
     if not cinema_id or not name:
-        return jsonify({"message": "cinema_id and name required"}), 400
-    if not Cinema.query.get(cinema_id):
-        return jsonify({"message": "Cinema not found"}), 404
-
-    room = Room(cinema_id=cinema_id, name=name, capacity=len(seats))
-    db.session.add(room)
-    db.session.flush()  # để có room.id
-
-    for s in seats:
-        seat_code = s.get("seat_code")
-        seat_type = s.get("type", "standard")
-        price = s.get("price", 0)
-        seat = Seat(room_id=room.id, seat_code=seat_code, type=seat_type, price=price)
-        db.session.add(seat)
-
+        return jsonify({"message": "Missing info"}), 400
+        
+    # Tạo phòng
+    # Mặc định capacity 50 (10 hàng x 5 cột)
+    new_room = Room(cinema_id=cinema_id, name=name, capacity=50)
+    db.session.add(new_room)
+    db.session.flush() # Lấy ID
+    
+    # --- Tự động tạo 50 ghế (A1..A5, B1..B5,... J1..J5) ---
+    rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
+    cols = range(1, 6) # 1-5
+    seats = []
+    for r_idx, row in enumerate(rows):
+        for col in cols:
+            seat_code = f"{row}{col}"
+            s_type = 'vip' if r_idx >= 8 else 'standard' # 2 hàng cuối là VIP
+            seats.append(Seat(room_id=new_room.id, seat_code=seat_code, type=s_type, price=0))
+            
+    db.session.add_all(seats)
     db.session.commit()
-    return jsonify({"message": "Room created", "id": room.id}), 201
+    
+    return jsonify({"message": "Room created with 50 seats", "id": new_room.id}), 201
 
-@room_bp.route('/<int:room_id>', methods=['PUT'])
+# 3. Xóa Phòng
+@room_bp.route('/<int:id>', methods=['DELETE'])
 @jwt_required()
-def update_room(room_id):
-    identity = get_jwt_identity()
-    if identity["role"] != "admin":
-        return jsonify({"message": "Access denied"}), 403
-    r = Room.query.get(room_id)
-    if not r:
-        return jsonify({"message": "Room not found"}), 404
+def delete_room(id):
+    claims = get_jwt()
+    if claims.get("role") != "admin": return jsonify({"message": "Denied"}), 403
+    
+    room = Room.query.get(id)
+    if not room: return jsonify({"message": "Not found"}), 404
+    
+    try:
+        # Xóa ghế trước
+        Seat.query.filter_by(room_id=id).delete()
+        db.session.delete(room)
+        db.session.commit()
+        return jsonify({"message": "Deleted"}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": str(e)}), 500
+    
+# Thêm vào cuối file room_routes.py
+
+@room_bp.route('/<int:id>', methods=['PUT'])
+@jwt_required()
+def update_room(id):
+    claims = get_jwt()
+    if claims.get("role") != "admin": return jsonify({"message": "Denied"}), 403
+    
+    room = Room.query.get(id)
+    if not room: return jsonify({"message": "Not found"}), 404
+    
     data = request.get_json()
-    r.name = data.get("name", r.name)
+    if 'name' in data: room.name = data['name']
+    
+    # Không cho sửa cinema_id hay capacity vì ảnh hưởng đến ghế đã tạo
+    
     db.session.commit()
-    return jsonify({"message": "Room updated"})
-
-@room_bp.route('/<int:room_id>', methods=['DELETE'])
-@jwt_required()
-def delete_room(room_id):
-    identity = get_jwt_identity()
-    if identity["role"] != "admin":
-        return jsonify({"message": "Access denied"}), 403
-    r = Room.query.get(room_id)
-    if not r:
-        return jsonify({"message": "Room not found"}), 404
-    db.session.delete(r)
-    db.session.commit()
-    return jsonify({"message": "Room deleted"})
-
+    return jsonify({"message": "Room updated"}), 200

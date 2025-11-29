@@ -56,4 +56,29 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    const searchInput = document.querySelector('.search-bar input');
+    const searchIcon = document.querySelector('.search-bar i');
+
+    // Hàm thực hiện tìm kiếm
+    function performSearch() {
+        const keyword = searchInput.value.trim();
+        if (keyword) {
+            // Chuyển hướng sang trang phim.html với tham số search
+            window.location.href = `phim.html?search=${encodeURIComponent(keyword)}`;
+        }
+    }
+
+    if (searchInput && searchIcon) {
+        // 1. Bắt sự kiện click vào icon kính lúp
+        searchIcon.addEventListener('click', performSearch);
+
+        // 2. Bắt sự kiện nhấn Enter trong ô input
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+    }
+
 });

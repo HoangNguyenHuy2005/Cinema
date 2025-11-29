@@ -2,122 +2,109 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .btn-edit { background: #f39c12; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; color: white; margin-right: 5px; }
+        .btn-delete { background: #c0392b; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; color: white; }
+        .btn-tiny { background: #27ae60; border: none; width: 20px; height: 20px; border-radius: 50%; color: white; cursor: pointer; font-size: 12px;}
+        .badge { background: #3498db; color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px; margin: 2px; display: inline-block; }
+        .badge i { margin-left: 5px; cursor: pointer; font-size: 10px; }
+    </style>
 </head>
 <body>
+
     <div class="admin-wrapper">
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <h3>Admin Panel</h3>
-            </div>
-            <nav class="sidebar-nav">
-                <ul>
-                    <li><a href="#" class="nav-link active" data-content="dashboard"><i class="fa-solid fa-chart-line"></i> Thống kê</a></li>
-                    <li><a href="#" class="nav-link" data-content="movies"><i class="fa-solid fa-film"></i> Quản lý Phim</a></li>
-                    <li><a href="#" class="nav-link" data-content="showtimes"><i class="fa-solid fa-calendar-days"></i> Quản lý Rạp & Suất chiếu</a></li>
-                    <li><a href="#" class="nav-link" data-content="bookings"><i class="fa-solid fa-ticket"></i> Quản lý Đơn hàng</a></li>
-                    <li><a href="#" class="nav-link" data-content="users"><i class="fa-solid fa-users"></i> Quản lý Người dùng</a></li>
-                    <li><a href="#" class="nav-link" data-content="promos"><i class="fa-solid fa-percent"></i> Quản lý Khuyến mãi</a></li>
-                    <li><a href="admin-login.html" class="nav-link logout"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a></li>
-                </ul>
-            </nav>
-        </aside>
+        <nav class="sidebar">
+            <div class="brand">Cinema Admin</div>
+            <ul>
+                <li><a href="#" class="nav-link active" data-content="movies"><i class="fa-solid fa-film"></i> Phim</a></li>
+                <li><a href="#" class="nav-link" data-content="showtimes"><i class="fa-solid fa-calendar"></i> Suất chiếu</a></li>
+                <li><a href="#" class="nav-link" data-content="cinemas"><i class="fa-solid fa-building"></i> Rạp & Phòng</a></li>
+                <li><a href="#" class="logout-btn" onclick="handleLogout()"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a></li>
+            </ul>
+        </nav>
 
         <div class="main-content">
-            <header class="admin-header">
-                <h2>Xin chào, Admin!</h2>
-                <div class="admin-profile">
-                    <img src="https://via.placeholder.com/40" alt="Admin Avatar">
-                    <span>Nguyễn Huy Hoàng</span>
-                </div>
-            </header>
+            <section id="movies" class="content-section active">
+                <div class="section-header"><h2>Phim</h2><button class="add-btn" onclick="openAddMovieModal()">+ Thêm</button></div>
+                <div class="table-responsive"><table class="data-table"><thead><tr><th>ID</th><th>Ảnh</th><th>Tên</th><th>Ngày</th><th>Action</th></tr></thead><tbody id="movie-list-body"></tbody></table></div>
+            </section>
 
-            <main class="content-area">
-                
-                <section id="dashboard" class="content-section active">
-                    <h3>Dashboard Thống kê</h3>
-                    <div class="summary-cards">
-                        <div class="card">
-                            <h4>Doanh thu hôm nay</h4>
-                            <p>50.000.000đ</p>
-                            <span><i class="fa-solid fa-arrow-up"></i> 15%</span>
-                        </div>
-                        <div class="card">
-                            <h4>Vé đã bán</h4>
-                            <p>520</p>
-                            <span><i class="fa-solid fa-arrow-up"></i> 10%</span>
-                        </div>
-                        <div class="card">
-                            <h4>Người dùng mới</h4>
-                            <p>85</p>
-                            <span><i class="fa-solid fa-arrow-up"></i> 5%</span>
-                        </div>
-                        <div class="card">
-                            <h4>Suất chiếu hôm nay</h4>
-                            <p>150</p>
-                            <span>...</span>
-                        </div>
-                    </div>
-                    <h4>Đơn hàng gần đây</h4>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Mã đơn</th>
-                                <th>Email</th>
-                                <th>Phim</th>
-                                <th>Tổng tiền</th>
-                                <th>Trạng thái</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>#12345</td>
-                                <td>user@email.com</td>
-                                <td>Phá Đảo Sinh Nhật Mẹ</td>
-                                <td>150.000đ</td>
-                                <td><span class="status paid">Đã thanh toán</span></td>
-                            </tr>
-                            <tr>
-                                <td>#12344</td>
-                                <td>user2@email.com</td>
-                                <td>Cái Ma</td>
-                                <td>100.000đ</td>
-                                <td><span class="status paid">Đã thanh toán</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </section>
+            <section id="showtimes" class="content-section">
+                <div class="section-header"><h2>Suất Chiếu</h2><button class="add-btn" onclick="openAddShowtimeModal()">+ Thêm</button></div>
+                <div class="table-responsive"><table class="data-table"><thead><tr><th>ID</th><th>Phim</th><th>Rạp/Phòng</th><th>Giờ</th><th>Giá</th><th>Action</th></tr></thead><tbody id="showtime-list-body"></tbody></table></div>
+            </section>
 
-                <section id="movies" class="content-section">
-                    <h3>Quản lý Phim</h3>
-                    <button class="add-new-btn"><i class="fa-solid fa-plus"></i> Thêm phim mới</button>
-                    </section>
-                
-                <section id="showtimes" class="content-section">
-                    <h3>Quản lý Rạp & Suất chiếu</h3>
-                    <button class="add-new-btn"><i class="fa-solid fa-plus"></i> Thêm suất chiếu mới</button>
-                    </section>
-                
-                <section id="bookings" class="content-section">
-                    <h3>Quản lý Đơn hàng</h3>
-                    </section>
-                
-                <section id="users" class="content-section">
-                    <h3>Quản lý Người dùng</h3>
-                    </section>
-
-                <section id="promos" class="content-section">
-                    <h3>Quản lý Khuyến mãi</h3>
-                    <button class="add-new-btn"><i class="fa-solid fa-plus"></i> Thêm mã khuyến mãi</button>
-                    </section>
-
-            </main>
+            <section id="cinemas" class="content-section">
+                <div class="section-header"><h2>Rạp & Phòng</h2><button class="add-btn" onclick="toggleModal('cinema-modal')">+ Thêm Rạp</button></div>
+                <div class="table-responsive"><table class="data-table"><thead><tr><th>ID</th><th>Tên Rạp</th><th>Địa chỉ</th><th>Phòng</th><th>Action</th></tr></thead><tbody id="cinema-list-body"></tbody></table></div>
+            </section>
         </div>
     </div>
 
+    <div id="movie-modal" class="modal-overlay hidden">
+        <div class="modal-content admin-form-content">
+            <h3 id="movie-modal-title">Thêm Phim</h3>
+            <form id="movie-form">
+                <input type="hidden" name="id" id="movie-id">
+                <div class="form-group"><label>Tên</label><input type="text" name="name" id="m-name" required></div>
+                <div class="form-group"><label>Đạo diễn</label><input type="text" name="director" id="m-director"></div>
+                <div class="form-group"><label>Diễn viên</label><input type="text" name="casts" id="m-casts"></div>
+                <div class="form-group-row">
+                    <div><label>Thời lượng</label><input type="number" name="duration" id="m-duration"></div>
+                    <div><label>Ngày chiếu</label><input type="date" name="release_date" id="m-date"></div>
+                </div>
+                <div class="form-group"><label>Poster</label><input type="text" name="poster" id="m-poster"></div>
+                <div class="form-group"><label>Mô tả</label><textarea name="description" id="m-desc" rows="2"></textarea></div>
+                <div class="modal-actions"><button type="button" class="cancel-btn" onclick="toggleModal('movie-modal')">Hủy</button><button type="submit" class="save-btn">Lưu</button></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="showtime-modal" class="modal-overlay hidden">
+        <div class="modal-content admin-form-content">
+            <h3 id="st-modal-title">Thêm Lịch</h3>
+            <form id="add-showtime-form">
+                <input type="hidden" name="id" id="st-id">
+                <div class="form-group"><label>Phim</label><select name="movie_id" id="st-movie-select" required></select></div>
+                <div class="form-group"><label>Phòng</label><select name="room_id" id="st-room-select" required></select></div>
+                <div class="form-group-row">
+                    <div><label>Giờ</label><input type="datetime-local" name="show_time" id="st-time" step="1" required></div>
+                    <div><label>Giá</label><input type="number" name="price" id="st-price" value="75000"></div>
+                </div>
+                <div class="modal-actions"><button type="button" class="cancel-btn" onclick="toggleModal('showtime-modal')">Hủy</button><button type="submit" class="save-btn">Lưu</button></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="cinema-modal" class="modal-overlay hidden">
+        <div class="modal-content admin-form-content">
+            <h3 id="cinema-modal-title">Thêm Rạp</h3>
+            <form id="add-cinema-form">
+                <input type="hidden" name="id" id="cinema-id">
+                <div class="form-group"><label>Tên</label><input type="text" name="name" id="cinema-name" required></div>
+                <div class="form-group"><label>Địa chỉ</label><input type="text" name="address" id="cinema-address"></div>
+                <div class="modal-actions"><button type="button" class="cancel-btn" onclick="toggleModal('cinema-modal')">Hủy</button><button type="submit" class="save-btn">Lưu</button></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="room-modal" class="modal-overlay hidden">
+        <div class="modal-content admin-form-content" style="width:300px">
+            <h3 id="room-modal-title">Thêm Phòng</h3>
+            <form id="add-room-form">
+                <input type="hidden" name="id" id="room-id">
+                <input type="hidden" name="cinema_id" id="room-cinema-id">
+                <div class="form-group"><label>Tên Phòng</label><input type="text" name="name" id="room-name" required></div>
+                <div class="modal-actions"><button type="button" class="cancel-btn" onclick="toggleModal('room-modal')">Hủy</button><button type="submit" class="save-btn">Lưu</button></div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
     <script src="js/admin.js"></script>
 </body>
 </html>

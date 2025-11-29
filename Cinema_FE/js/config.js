@@ -1,37 +1,37 @@
 // js/config.js
 const API_BASE_URL = 'http://127.0.0.1:5000/api';
 
-/**
- * Hàm gọi API chung
- * @param {string} endpoint - Ví dụ: '/movies'
- * @param {string} method - 'GET', 'POST', v.v.
- * @param {object} body - Dữ liệu gửi đi (nếu có)
- */
 async function callAPI(endpoint, method = 'GET', body = null) {
     const token = localStorage.getItem('accessToken');
-    const headers = {
-        'Content-Type': 'application/json'
-    };
+    const headers = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
 
-    if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-    }
-
-    const options = {
-        method,
-        headers
-    };
-
-    if (body) {
-        options.body = JSON.stringify(body);
-    }
+    const options = { method, headers };
+    if (body) options.body = JSON.stringify(body);
 
     try {
         const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
-        const data = await response.json();
+        
+        // Kiểm tra Content-Type để parse đúng
+        const contentType = response.headers.get("content-type");
+        let data = {};
+
+        if (contentType && contentType.includes("application/json")) {
+            data = await response.json();
+        } else {
+            // Nếu không phải JSON (ví dụ lỗi server text/html), lấy text
+            const text = await response.text();
+            // Tạo object data giả để frontend không bị lỗi undefined
+            data = { message: text.substring(0, 100) || `Lỗi HTTP ${response.status}` };
+        }
+
         return { ok: response.ok, status: response.status, data };
     } catch (error) {
         console.error('API Error:', error);
-        return { ok: false, error };
+        return { 
+            ok: false, 
+            status: 0, 
+            data: { message: "Không thể kết nối đến Server" } 
+        };
     }
 }

@@ -1,37 +1,37 @@
+// Cinema_FE/js/lich-chieu.js
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Chỉ cần load dữ liệu cho khung 3 cột
     loadScheduleData();
 });
 
-let scheduleTheaters = [];
-let scheduleShowtimes = [];
+let allCinemas = [];
+let allShowtimes = [];
 
 async function loadScheduleData() {
-    const [theatersRes, showtimesRes] = await Promise.all([
-        callAPI('/theaters', 'GET'),
+    // Gọi song song 2 API
+    const [cinemasRes, showtimesRes] = await Promise.all([
+        callAPI('/cinemas', 'GET'),
         callAPI('/showtimes', 'GET')
     ]);
 
-    if (theatersRes.ok) scheduleTheaters = theatersRes.data;
-    if (showtimesRes.ok) scheduleShowtimes = showtimesRes.data;
+    if (cinemasRes.ok) allCinemas = cinemasRes.data;
+    if (showtimesRes.ok) allShowtimes = showtimesRes.data;
 
-    // Tái sử dụng logic render (hoặc copy hàm từ dat-ve.js nếu không muốn gộp file)
     renderScheduleAreas();
 }
 
 function renderScheduleAreas() {
-    // Logic y hệt renderAreas() bên dat-ve.js nhưng trỏ vào class của trang lich-chieu.html
-    // ... (Bạn có thể copy code từ dat-ve.js sang đây và đổi tên biến nếu cần)
-    
     const areaList = document.querySelector('.area-list ul');
     if (!areaList) return;
     areaList.innerHTML = '';
 
-    const cities = [...new Set(scheduleTheaters.map(t => extractCity(t.Address)))];
+    // Lấy danh sách thành phố duy nhất
+    const cities = [...new Set(allCinemas.map(c => extractCity(c.address)))];
 
     cities.forEach((city, index) => {
         const li = document.createElement('li');
         li.innerHTML = `<a href="#" class="area-link ${index === 0 ? 'active' : ''}">${city}</a>`;
+        
         li.querySelector('a').addEventListener('click', (e) => {
             e.preventDefault();
             document.querySelectorAll('.area-link').forEach(el => el.classList.remove('active'));
@@ -49,60 +49,73 @@ function renderScheduleCinemas(city) {
     if (!cinemaList) return;
     cinemaList.innerHTML = '';
 
-    const theaters = scheduleTheaters.filter(t => extractCity(t.Address) === city);
+    const cinemas = allCinemas.filter(c => extractCity(c.address) === city);
 
-    theaters.forEach((theater, index) => {
+    cinemas.forEach((cinema, index) => {
         const li = document.createElement('li');
-        li.innerHTML = `<a href="#" class="cinema-link ${index === 0 ? 'active' : ''}">${theater.Name}</a>`;
+        li.innerHTML = `<a href="#" class="cinema-link ${index === 0 ? 'active' : ''}">${cinema.name}</a>`;
+        
         li.querySelector('a').addEventListener('click', (e) => {
             e.preventDefault();
             document.querySelectorAll('.cinema-link').forEach(el => el.classList.remove('active'));
             e.target.classList.add('active');
-            renderScheduleList(theater.TheaterID);
+            renderScheduleList(cinema.id);
         });
         cinemaList.appendChild(li);
     });
 
-    if (theaters.length > 0) renderScheduleList(theaters[0].TheaterID);
+    if (cinemas.length > 0) renderScheduleList(cinemas[0].id);
 }
 
-function renderScheduleList(theaterID) {
-    // Logic render danh sách phim giống dat-ve.js
-    const container = document.querySelector('.cinema-showtime-list'); // Class khác một chút so với dat-ve.html
+function renderScheduleList(cinemaID) {
+    const container = document.querySelector('.cinema-showtime-list');
     if (!container) return;
     
     container.innerHTML = '';
-    const today = new Date().toISOString().split('T')[0];
     
-    const showtimes = scheduleShowtimes.filter(s => 
-        s.Screen.TheaterID === theaterID && 
-        s.StartTime.startsWith(today)
-    );
+    // Lọc suất chiếu theo Rạp
+    const showtimes = allShowtimes.filter(s => s.cinema_id == cinemaID);
 
     if (showtimes.length === 0) {
-        container.innerHTML = '<p style="padding:20px">Chưa có lịch chiếu.</p>';
+        container.innerHTML = '<p style="padding:20px">Chưa có lịch chiếu tại rạp này.</p>';
         return;
     }
 
-    // Group by Movie logic...
+    // Gom nhóm theo tên phim
     const moviesMap = {}; 
     showtimes.forEach(s => {
-        if (!moviesMap[s.Movie.Name]) moviesMap[s.Movie.Name] = { ...s.Movie, times: [] };
-        moviesMap[s.Movie.Name].times.push(s);
+        const mName = s.movie_name || "Unknown Movie";
+        
+        if (!moviesMap[mName]) {
+            // --- SỬA: Ưu tiên lấy poster từ s.movie_poster ---
+            moviesMap[mName] = { 
+                name: mName, 
+                poster: s.movie_poster || 'https://via.placeholder.com/100x150?text=No+Img', 
+                times: [] 
+            };
+        }
+        moviesMap[mName].times.push(s);
     });
 
-    // Render
+    // Render ra HTML
     Object.values(moviesMap).forEach(movie => {
         const timesHtml = movie.times.map(s => {
-            const time = new Date(s.StartTime).toLocaleTimeString('vi-VN', {hour:'2-digit', minute:'2-digit'});
-            return `<a href="#" class="time-slot"><span>${time}</span><span>${parseInt(s.Price)/1000}K</span></a>`;
+            const time = new Date(s.show_time).toLocaleTimeString('vi-VN', {hour:'2-digit', minute:'2-digit'});
+            const price = (s.price_standard || 0).toLocaleString();
+            
+            return `<a href="chon-ghe.html?showtimeId=${s.id}" class="time-slot">
+                        <span>${time}</span>
+                        <span class="price-sub">${price}đ</span>
+                    </a>`;
         }).join('');
 
         const html = `
             <div class="movie-showtime-item">
-                <div class="poster"><img src="${movie.PosterURL || 'https://via.placeholder.com/100x150'}" alt=""></div>
+                <div class="poster">
+                    <img src="${movie.poster}" alt="${movie.name}" onerror="this.src='https://via.placeholder.com/100x150'">
+                </div>
                 <div class="details">
-                    <h4>${movie.Name}</h4>
+                    <h4>${movie.name}</h4>
                     <div class="format-block">
                         <strong>2D Phụ Đề</strong>
                         <div class="times">${timesHtml}</div>

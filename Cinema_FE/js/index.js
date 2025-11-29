@@ -29,28 +29,36 @@ function renderMovieCarousel(movies) {
     }
 
     movies.forEach(movie => {
-        // Xử lý dữ liệu (đảm bảo có ảnh default nếu DB chưa có)
-        const poster = movie.PosterURL || 'https://via.placeholder.com/180x270?text=No+Image';
-        // Format ngày chiếu
-        const releaseDate = new Date(movie.ReleaseDate).toLocaleDateString('vi-VN', {day: '2-digit', month: '2-digit'});
+        // --- SỬA LỖI Ở ĐÂY ---
+        // Chấp nhận cả key cũ (viết hoa) và key mới (viết thường)
+        const poster = movie.poster || movie.PosterURL || 'https://via.placeholder.com/180x270?text=No+Image';
+        const name = movie.name || movie.Name || "Tên phim chưa cập nhật";
+        const id = movie.id || movie.MovieID;
+        
+        // Xử lý ngày tháng
+        const rawDate = movie.release_date || movie.ReleaseDate;
+        let releaseDateStr = "Sắp chiếu";
+        if (rawDate) {
+            releaseDateStr = new Date(rawDate).toLocaleDateString('vi-VN', {day: '2-digit', month: '2-digit'});
+        }
         
         const html = `
             <div class="movie-card">
                 <div class="poster-img">
-                    <img src="${poster}" alt="${movie.Name}">
+                    <img src="${poster}" alt="${name}">
                     <span class="tag-soon">CHIẾU SỚM</span> 
                 </div>
                 <div class="movie-info">
-                    <h3>${movie.Name}</h3>
-                    <p class="release-date">${releaseDate}</p>
+                    <h3>${name}</h3>
+                    <p class="release-date">${releaseDateStr}</p>
                 </div>
-                <a href="dat-ve.html?movieId=${movie.MovieID}" class="buy-ticket-btn">Mua vé</a>
+                <a href="dat-ve.html?movieId=${id}" class="buy-ticket-btn">Mua vé</a>
             </div>
         `;
         container.innerHTML += html;
     });
 
-    // Khởi tạo Slider (Code cũ của bạn để chạy slider)
+    // Khởi tạo Slider
     initMovieSlider();
 }
 
@@ -62,15 +70,20 @@ function initMovieSlider() {
     if (items.length === 0) return;
 
     let currentIndex = 0;
-    const gap = 20;
-    const itemWidth = items[0].offsetWidth + gap;
+    // Tính toán độ rộng item + gap (nếu có css gap)
+    // Giả sử gap khoảng 20px từ CSS
+    const itemStyle = window.getComputedStyle(items[0]);
+    const itemWidth = items[0].offsetWidth + parseInt(itemStyle.marginRight || 0) + 20; 
     
     // Tự động chạy slider
     let sliderInterval = setInterval(() => {
         currentIndex++;
-        if (currentIndex * itemWidth >= carousel.scrollWidth - carousel.clientWidth) {
-            currentIndex = 0;
+        // Reset nếu chạy quá (ước lượng)
+        if (carousel.scrollLeft + carousel.clientWidth >= carousel.scrollWidth) {
+             currentIndex = 0;
+             carousel.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+             carousel.scrollBy({ left: itemWidth, behavior: 'smooth' });
         }
-        carousel.scrollTo({ left: currentIndex * itemWidth, behavior: 'smooth' });
     }, 4000);
 }

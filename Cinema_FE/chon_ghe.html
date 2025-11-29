@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chọn ghế - Cinema Booking</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/chon-ghe.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="nav-links">
+            <a href="dat-ve.html">Đặt vé</a>
+            <a href="lich-chieu.html">Lịch chiếu</a>
+            <a href="phim.html">Phim</a>
+        </div>
+        <div class="nav-links-center">
+            <a href="index.html">Trang chủ</a>
+        </div>
+        <div class="search-user">
+            <a href="dang-nhap.html" class="user-icon"><i class="fa-solid fa-user"></i></a>
+        </div>
+    </header>
+
+    <main class="booking-main">
+        <div class="container">
+            <div class="booking-header">
+                <h2>Vui lòng chọn ghế</h2>
+            </div>
+
+            <ul class="legend">
+                <li><div class="seat available"></div> Trống</li>
+                <li><div class="seat booked"></div> Đã đặt</li>
+                <li><div class="seat selected"></div> Đang chọn</li>
+                <li><div class="seat vip"></div> VIP</li>
+            </ul>
+
+            <div class="screen-container">
+                <div class="screen"></div>
+                <p class="screen-text">Màn hình</p>
+            </div>
+
+            <div id="seat-map" class="seat-map">
+                </div>
+        </div>
+    </main>
+
+    <div class="booking-bar">
+        <div class="booking-info">
+            <p id="booking-summary">Ghế chọn: Chưa có</p>
+        </div>
+        <button id="confirm-booking-btn" class="confirm-btn" disabled>Xác nhận đặt vé</button>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/base.js"></script>
+    <script src="js/chon-ghe.js"></script>
+</body>
+</html>

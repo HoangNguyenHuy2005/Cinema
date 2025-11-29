@@ -1,181 +1,133 @@
-# showtime_routes.py
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required, get_jwt_identity
-from models import db, Movie, Schedule, Room, Seat, ScheduleSeat, LOCK_TIMEOUT_MINUTES
-from datetime import datetime, timedelta
+from flask_jwt_extended import jwt_required, get_jwt
+from models import db, Schedule, Movie, Room, ScheduleSeat, Cinema, Seat
+from datetime import datetime
 
 showtime_bp = Blueprint('showtime', __name__)
 
 def parse_show_time(val):
-    # chấp nhận "YYYY-mm-dd HH:MM:SS" hoặc ISO
-    if not val:
-        return None
-    if isinstance(val, datetime):
-        return val
-    try:
-        return datetime.strptime(val, "%Y-%m-%d %H:%M:%S")
-    except Exception:
+    if not val: return None
+    val = val.replace("T", " ")
+    if len(val) > 16: val = val[:19]
+    formats = ["%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M"]
+    for fmt in formats:
         try:
-            return datetime.fromisoformat(val)
-        except Exception:
-            return None
+            return datetime.strptime(val, fmt)
+        except ValueError:
+            continue
+    return None
 
-@showtime_bp.route('/', methods=['GET'])
+@showtime_bp.route('', methods=['GET'])
 def list_showtimes():
-    movie_id = request.args.get('movieId', type=int)
-    date = request.args.get('date')  # "2025-11-20"
-    q = Schedule.query
-    if movie_id:
-        q = q.filter_by(movie_id=movie_id)
-    if date:
-        try:
-            d = datetime.strptime(date, "%Y-%m-%d").date()
-            start = datetime.combine(d, datetime.min.time())
-            end = datetime.combine(d, datetime.max.time())
-            q = q.filter(Schedule.show_time >= start, Schedule.show_time <= end)
-        except:
-            pass
-    sts = q.all()
-    def tojson(s):
-        return {
-            "id": s.id,
-            "movie_id": s.movie_id,
-            "movie_name": s.movie.name if s.movie else None,
-            "room_id": s.room_id,
-            "show_time": s.show_time.strftime("%Y-%m-%d %H:%M:%S"),
-            "price_standard": s.price_standard,
-            "price_vip": s.price_vip
-        }
-    return jsonify([tojson(s) for s in sts])
+    try:
+        query = db.session.query(Schedule, Movie, Room, Cinema)\
+            .join(Movie, Schedule.movie_id == Movie.id)\
+            .join(Room, Schedule.room_id == Room.id)\
+            .join(Cinema, Room.cinema_id == Cinema.id)\
+            .order_by(Schedule.show_time.desc())
 
-@showtime_bp.route('/<int:sid>', methods=['GET'])
-def get_showtime(sid):
-    s = Schedule.query.get(sid)
-    if not s:
-        return jsonify({"message": "Showtime not found"}), 404
-    return jsonify({
-        "id": s.id,
-        "movie_id": s.movie_id,
-        "movie_name": s.movie.name if s.movie else None,
-        "room_id": s.room_id,
-        "show_time": s.show_time.strftime("%Y-%m-%d %H:%M:%S"),
-        "price_standard": s.price_standard,
-        "price_vip": s.price_vip
-    })
+        results = query.all()
+        data = []
+        for s, m, r, c in results:
+            data.append({
+                "id": s.id,
+                "movie_id": m.id,           # Cần thiết để fill form sửa
+                "movie_name": m.name,
+                "movie_poster": m.poster,   # Cần thiết cho trang Lịch chiếu
+                "cinema_id": c.id,
+                "cinema_name": c.name,
+                "room_id": r.id,            # Cần thiết để fill form sửa
+                "room_name": r.name,
+                "show_time": s.show_time.strftime("%Y-%m-%d %H:%M:%S"),
+                "price_standard": s.price_standard,
+                "price_vip": s.price_vip
+            })
+        return jsonify(data), 200
+    except Exception as e:
+        return jsonify({"message": str(e)}), 500
 
-# Trong showtime_routes.py, thêm đoạn mã này sau hàm get_showtime(sid)
-
-@showtime_bp.route('/<int:sid>/seats', methods=['GET'])
-def list_schedule_seats(sid):
-    """
-    Trả về danh sách tất cả các ghế và trạng thái của chúng
-    trong một suất chiếu (schedule) cụ thể.
-    """
-    schedule = Schedule.query.get(sid)
-    if not schedule:
-        return jsonify({"message": "Showtime not found"}), 404
-
-    schedule_seats = ScheduleSeat.query.filter_by(schedule_id=sid).all()
-    
-    now = datetime.now()
-    seats_data = []
-    
-    for ss in schedule_seats:
-        current_status = ss.status
-        
-        if ss.status == 'locked':
-            if ss.lock_time and (now - ss.lock_time) > timedelta(minutes=LOCK_TIMEOUT_MINUTES):
-                ss.status = 'available'
-                ss.lock_time = None
-                db.session.add(ss)
-                current_status = 'available'
-            
-        seats_data.append({
-            "seat_id": ss.seat_id,
-            "seat_code": ss.seat.seat_code,
-            "type": ss.seat.type,
-            "status": current_status,
-            "price_standard": schedule.price_standard if ss.seat.type == 'standard' else None,
-            "price_vip": schedule.price_vip if ss.seat.type == 'vip' else None
-        })
-
-    db.session.commit()
-    
-    return jsonify(seats_data)
-
-@showtime_bp.route('/', methods=['POST'])
+@showtime_bp.route('', methods=['POST'])
 @jwt_required()
 def create_showtime():
-    identity = get_jwt_identity()
-    if identity["role"] != "admin":
-        return jsonify({"message": "Access denied"}), 403
+    claims = get_jwt()
+    if claims.get("role") != "admin": return jsonify({"message": "Denied"}), 403
 
     data = request.get_json()
     movie_id = data.get("movie_id")
     room_id = data.get("room_id")
-    show_time_raw = data.get("show_time")
-    price_standard = data.get("price_standard")
-    price_vip = data.get("price_vip")
+    show_time = parse_show_time(data.get("show_time"))
+    price = int(data.get("price", 75000))
 
-    if not (movie_id and room_id and show_time_raw):
-        return jsonify({"message": "movie_id, room_id, show_time required"}), 400
+    if not all([movie_id, room_id, show_time]):
+        return jsonify({"message": "Thiếu thông tin bắt buộc"}), 400
 
-    show_time = parse_show_time(show_time_raw)
-    if not show_time:
-        return jsonify({"message": "Invalid show_time format. Use 'YYYY-mm-dd HH:MM:SS'"}), 400
+    try:
+        # 1. Tạo lịch
+        new_schedule = Schedule(
+            movie_id=movie_id, room_id=room_id, 
+            show_time=show_time, 
+            price_standard=price, 
+            price_vip=price + 20000
+        )
+        db.session.add(new_schedule)
+        db.session.flush() # Lấy ID
 
-    if not Movie.query.get(movie_id):
-        return jsonify({"message": "Movie not found"}), 404
-    room = Room.query.get(room_id)
-    if not room:
-        return jsonify({"message": "Room not found"}), 404
+        # 2. Copy ghế từ Room sang ScheduleSeat
+        base_seats = Seat.query.filter_by(room_id=room_id).all()
+        if not base_seats:
+             db.session.rollback()
+             return jsonify({"message": "Phòng chiếu này chưa có ghế nào (Cần tạo phòng trước)!"}), 400
 
-    s = Schedule(movie_id=movie_id, room_id=room_id, show_time=show_time,
-                 price_standard=price_standard, price_vip=price_vip)
-    db.session.add(s)
-    db.session.flush()
+        for seat in base_seats:
+            ss = ScheduleSeat(schedule_id=new_schedule.id, seat_id=seat.id, status='available')
+            db.session.add(ss)
+        
+        db.session.commit()
+        return jsonify({"message": "Tạo suất chiếu thành công", "id": new_schedule.id}), 201
+    except Exception as e:
+        db.session.rollback()
+        print(e)
+        return jsonify({"message": str(e)}), 500
 
-    # Tạo ScheduleSeat từ tất cả Seat trong Room
-    seats = Seat.query.filter_by(room_id=room_id).all()
-    for seat in seats:
-        ss = ScheduleSeat(schedule_id=s.id, seat_id=seat.id, status='available')
-        db.session.add(ss)
-
-    db.session.commit()
-    return jsonify({"message": "Showtime created", "id": s.id}), 201
-
-@showtime_bp.route('/<int:sid>', methods=['PUT'])
+@showtime_bp.route('/<int:id>', methods=['PUT'])
 @jwt_required()
-def update_showtime(sid):
-    identity = get_jwt_identity()
-    if identity["role"] != "admin":
-        return jsonify({"message": "Access denied"}), 403
-    s = Schedule.query.get(sid)
-    if not s:
-        return jsonify({"message": "Showtime not found"}), 404
+def update_showtime(id):
+    claims = get_jwt()
+    if claims.get("role") != "admin": return jsonify({"message": "Denied"}), 403
+    
+    s = Schedule.query.get(id)
+    if not s: return jsonify({"message": "Not found"}), 404
+    
     data = request.get_json()
-    if data.get("show_time"):
-        st = parse_show_time(data.get("show_time"))
-        if not st:
-            return jsonify({"message": "Invalid show_time"}), 400
-        s.show_time = st
-    s.price_standard = data.get("price_standard", s.price_standard)
-    s.price_vip = data.get("price_vip", s.price_vip)
-    db.session.commit()
-    return jsonify({"message": "Showtime updated"})
+    try:
+        if 'movie_id' in data: s.movie_id = data['movie_id']
+        # Không cho sửa room_id vì phức tạp logic ghế
+        
+        if data.get('show_time'):
+            st = parse_show_time(data.get('show_time'))
+            if st: s.show_time = st
+            
+        if 'price' in data: # Frontend gửi lên là 'price'
+            s.price_standard = int(data['price'])
+            s.price_vip = s.price_standard + 20000
+            
+        db.session.commit()
+        return jsonify({"message": "Cập nhật thành công"}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": str(e)}), 500
 
-@showtime_bp.route('/<int:sid>', methods=['DELETE'])
+@showtime_bp.route('/<int:id>', methods=['DELETE'])
 @jwt_required()
-def delete_showtime(sid):
-    identity = get_jwt_identity()
-    if identity["role"] != "admin":
-        return jsonify({"message": "Access denied"}), 403
-    s = Schedule.query.get(sid)
-    if not s:
-        return jsonify({"message": "Showtime not found"}), 404
-    # Xoá ScheduleSeat trước
-    from models import ScheduleSeat
-    ScheduleSeat.query.filter_by(schedule_id=s.id).delete()
-    db.session.delete(s)
-    db.session.commit()
-    return jsonify({"message": "Showtime deleted"})
+def delete_showtime(id):
+    claims = get_jwt()
+    if claims.get("role") != "admin": return jsonify({"message": "Denied"}), 403
+    
+    try:
+        ScheduleSeat.query.filter_by(schedule_id=id).delete()
+        Schedule.query.filter_by(id=id).delete()
+        db.session.commit()
+        return jsonify({"message": "Đã xóa"}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": str(e)}), 500

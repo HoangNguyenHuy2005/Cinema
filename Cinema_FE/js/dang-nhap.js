@@ -1,23 +1,19 @@
-// js/dang-nhap.js
 document.addEventListener('DOMContentLoaded', () => {
-    // --- Logic Tab (Chuyển đổi giữa Đăng nhập và Đăng ký) ---
+    // Logic Tab (Đăng nhập / Đăng ký)
     const tabLinks = document.querySelectorAll('.tab-link');
     const forms = document.querySelectorAll('.auth-form');
 
     tabLinks.forEach(link => {
         link.addEventListener('click', () => {
-            // Active tab
             tabLinks.forEach(l => l.classList.remove('active'));
             link.classList.add('active');
-
-            // Show form
             const formId = link.dataset.form;
             forms.forEach(f => f.classList.remove('active'));
             document.getElementById(formId).classList.add('active');
         });
     });
 
-    // --- Xử lý Đăng nhập ---
+    // --- XỬ LÝ ĐĂNG NHẬP ---
     const loginForm = document.getElementById('login');
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
@@ -39,14 +35,21 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.innerText = "Đăng nhập";
 
             if (result.ok) {
-                alert('Đăng nhập thành công!');
+                // --- LƯU TOKEN VÀ ROLE (QUAN TRỌNG) ---
                 localStorage.setItem('accessToken', result.data.access_token);
-                // Lưu username để dùng sau này nếu cần
+                
+                // Lưu role để admin.js kiểm tra
+                if (result.data.role) {
+                    localStorage.setItem('userRole', result.data.role);
+                }
+                
                 if (result.data.username) {
                     localStorage.setItem('username', result.data.username);
                 }
                 
-                // Chuyển hướng dựa trên role
+                alert('Đăng nhập thành công!');
+
+                // Chuyển hướng
                 if (result.data.role === 'admin') {
                     window.location.href = 'admin-dashboard.html';
                 } else {
@@ -58,14 +61,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Xử lý Đăng ký ---
+    // --- XỬ LÝ ĐĂNG KÝ ---
     const registerForm = document.getElementById('register');
     if (registerForm) {
         registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            // Backend hiện tại chỉ nhận username/password, chưa lưu Name/Email riêng
-            // Ta sẽ dùng Email làm username
             const name = document.getElementById('reg-name').value;
             const email = document.getElementById('reg-email').value; 
             const password = document.getElementById('reg-pass').value;
@@ -79,10 +80,11 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.innerText = "Đang đăng ký...";
             submitBtn.disabled = true;
 
-            // Gọi API Register
             const result = await callAPI('/auth/register', 'POST', {
                 username: email, 
-                password: password
+                password: password,
+                full_name: name,
+                email: email
             });
 
             submitBtn.innerText = "Đăng ký";
@@ -90,12 +92,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (result.ok) {
                 alert('Đăng ký thành công! Vui lòng đăng nhập.');
-                // Tự động chuyển sang tab đăng nhập
                 document.querySelector('.tab-link[data-form="login"]').click();
-                // Điền sẵn email vừa đăng ký
                 document.getElementById('login-email').value = email;
             } else {
-                alert(result.data.message || 'Đăng ký thất bại. Username có thể đã tồn tại.');
+                alert(result.data.message || 'Đăng ký thất bại.');
             }
         });
     }

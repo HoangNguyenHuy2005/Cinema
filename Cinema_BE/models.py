@@ -3,10 +3,23 @@ from datetime import datetime, timedelta
 
 db = SQLAlchemy()
 
+# --- Bảng liên kết Nhiều-Nhiều giữa Phim và Thể loại ---
+movie_genre = db.Table('movie_genre',
+    db.Column('movie_id', db.Integer, db.ForeignKey('MOVIE.id'), primary_key=True),
+    db.Column('genre_id', db.Integer, db.ForeignKey('GENRE.id'), primary_key=True)
+)
+
+class Genre(db.Model):
+    __tablename__ = 'GENRE'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), unique=True, nullable=False)
+
 class User(db.Model):
     __tablename__ = 'USER'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True) 
+    full_name = db.Column(db.String(100))
     password_hash = db.Column(db.String(255), nullable=False)
     role = db.Column(db.String(50), default='user')
     bookings = db.relationship('Booking', backref='user', lazy=True)
@@ -24,7 +37,13 @@ class Movie(db.Model):
     status = db.Column(db.String(50), default='coming')
     poster = db.Column(db.String(512))
     trailer = db.Column(db.String(512))
-    schedules = db.relationship('Schedule', backref='movie', lazy=True)
+    
+    schedules = db.relationship('Schedule', backref='movie', lazy=True, cascade="all, delete-orphan")
+    
+    # Quan hệ với Genre
+    genres = db.relationship('Genre', secondary=movie_genre, lazy='subquery',
+                             backref=db.backref('movies', lazy=True))
+
     __table_args__ = {'mysql_engine': 'InnoDB'}
 
 class Cinema(db.Model):
@@ -32,7 +51,8 @@ class Cinema(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False)
     address = db.Column(db.String(512))
-    rooms = db.relationship('Room', backref='cinema', lazy=True)
+    logo = db.Column(db.String(512))
+    rooms = db.relationship('Room', backref='cinema', lazy=True, cascade="all, delete-orphan")
     __table_args__ = {'mysql_engine': 'InnoDB'}
 
 class Room(db.Model):
@@ -41,7 +61,7 @@ class Room(db.Model):
     cinema_id = db.Column(db.Integer, db.ForeignKey('CINEMA.id'), nullable=False)
     name = db.Column(db.String(100), nullable=False)
     capacity = db.Column(db.Integer, default=0)
-    seats = db.relationship('Seat', backref='room', lazy=True)
+    seats = db.relationship('Seat', backref='room', lazy=True, cascade="all, delete-orphan")
     schedules = db.relationship('Schedule', backref='room', lazy=True)
     __table_args__ = {'mysql_engine': 'InnoDB'}
 
@@ -63,7 +83,7 @@ class Schedule(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     price_standard = db.Column(db.Integer)
     price_vip = db.Column(db.Integer)
-    schedule_seats = db.relationship('ScheduleSeat', backref='schedule', lazy=True)
+    schedule_seats = db.relationship('ScheduleSeat', backref='schedule', lazy=True, cascade="all, delete-orphan")
     bookings = db.relationship('Booking', backref='schedule', lazy=True)
     __table_args__ = {'mysql_engine': 'InnoDB'}
 
@@ -100,18 +120,7 @@ class Ticket(db.Model):
     seat = db.relationship('Seat')
     __table_args__ = {'mysql_engine': 'InnoDB'}
 
-class Payment(db.Model):
-    __tablename__ = 'PAYMENT'
-    id = db.Column(db.Integer, primary_key=True)
-    booking_id = db.Column(db.Integer)
-    provider = db.Column(db.String(50))
-    amount = db.Column(db.Integer)
-    status = db.Column(db.String(50))
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    __table_args__ = {'mysql_engine': 'InnoDB'}
-
 LOCK_TIMEOUT_MINUTES = 5
 def lock_expired(dt: datetime):
-    if dt is None:
-        return True
+    if dt is None: return True
     return datetime.utcnow() > dt

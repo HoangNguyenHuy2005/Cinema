@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-
     <header class="main-header">
         <div class="nav-links">
             <a href="dat-ve.html">Đặt vé phim chiếu rạp</a>
@@ -41,27 +40,9 @@
     <div id="cinema-modal" class="modal-overlay hidden">
         <div class="modal-content">
             <button class="modal-close-btn">&times;</button>
-            <div class="modal-header">
-                <div class="modal-search-bar">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" placeholder="Tìm rạp tại">
-                </div>
-                <div class="modal-location-filter">
-                    <input type="text" value="Tp. Hồ Chí Minh">
-                </div>
+            <h3 style="text-align:center; margin-top:0; color:#333">Chọn Rạp Phim</h3>
+            <ul class="cinema-list-modal"></ul>
             </div>
-            <div class="modal-body">
-                <ul class="cinema-list-modal">
-                    <li>
-                        <img src="https://via.placeholder.com/50/007BFF/FFFFFF?text=B" alt="Beta" class="cinema-logo">
-                        <div class="cinema-details">
-                            <h4>Beta Quang Trung <a href="#" class="map-link">bản đồ</a></h4>
-                            <p class="address">645 Quang Trung, Phường 11, Quận Gò Vấp, Thành phố Hồ Chí Minh</p>
-                        </div>
-                    </li>
-                    </ul>
-            </div>
-        </div>
     </div>
 
     <script src="js/config.js"></script>

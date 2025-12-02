@@ -1,11 +1,13 @@
-/* css/chon-ghe.css */
+/* Reset nền trắng */
+body, main {
+    background-color: #f8f9fa;
+    color: #333;
+}
 
 .booking-main {
-    padding-top: 80px; /* Tránh header che */
-    padding-bottom: 100px; /* Tránh booking-bar che */
+    padding-top: 100px;
+    padding-bottom: 120px; /* Để không bị booking-bar che */
     min-height: 100vh;
-    background-color: #1a1a1a;
-    color: #fff;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -18,21 +20,27 @@
 }
 
 .booking-header h2 {
-    margin-bottom: 20px;
-    color: #fca311;
+    margin-bottom: 5px;
+    color: #222;
+    font-size: 24px;
 }
 
-/* --- CHÚ THÍCH (LEGEND) --- */
+.booking-header p {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+/* LEGEND (Chú thích) */
 .legend {
     display: flex;
     justify-content: center;
     gap: 20px;
     margin-bottom: 30px;
-    padding: 0;
+    padding: 15px;
     list-style: none;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 10px;
+    background: #fff;
     border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .legend li {
@@ -40,53 +48,53 @@
     align-items: center;
     gap: 8px;
     font-size: 14px;
+    color: #555;
 }
 
 .legend .seat {
     width: 20px;
     height: 20px;
     border-radius: 4px;
-    cursor: default;
 }
 
-/* --- MÀN HÌNH (SCREEN EFFECT) --- */
+/* SCREEN */
 .screen-container {
-    margin-bottom: 40px;
-    perspective: 500px; /* Tạo hiệu ứng 3D */
+    margin-bottom: 50px;
+    perspective: 500px;
 }
 
 .screen {
-    height: 60px;
-    width: 100%;
-    background: #fff;
-    transform: rotateX(-15deg) scale(0.9); /* Nghiêng màn hình */
-    box-shadow: 0 20px 50px rgba(255, 255, 255, 0.5);
-    border-radius: 10px;
+    height: 40px;
+    width: 60%;
+    margin: 0 auto;
+    background: #e0e0e0;
+    transform: rotateX(-15deg);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
     margin-bottom: 10px;
 }
 
 .screen-text {
-    font-size: 14px;
-    color: #777;
+    font-size: 12px;
+    color: #999;
 }
 
-/* --- SƠ ĐỒ GHẾ --- */
+/* GHẾ */
 .seat-map {
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Khoảng cách giữa các hàng */
+    gap: 8px;
     align-items: center;
 }
 
 .seat-row {
     display: flex;
-    gap: 8px; /* Khoảng cách giữa các ghế trong hàng */
+    gap: 6px;
 }
 
-/* Style chung cho ghế */
 .seat {
-    width: 35px;
-    height: 35px;
+    width: 30px;
+    height: 30px;
     border-radius: 6px 6px 2px 2px;
     display: flex;
     align-items: center;
@@ -96,88 +104,87 @@
     cursor: pointer;
     transition: 0.2s;
     user-select: none;
+    border: 1px solid #ddd;
 }
 
-/* 1. Ghế Thường (Standard) */
+/* Màu ghế cho nền sáng */
 .seat.standard.available {
-    background-color: #444;
-    color: #aaa;
+    background-color: #fff;
+    color: #555;
 }
 
 .seat.standard.available:hover {
-    background-color: #666;
+    background-color: #eee;
     transform: scale(1.1);
 }
 
-/* 2. Ghế VIP */
 .seat.vip {
     border: 1px solid #fca311;
 }
 .seat.vip.available {
-    background-color: #333;
+    background-color: #fff8e1; /* Vàng nhạt */
     color: #fca311;
 }
 .seat.vip.available:hover {
     background-color: #fca311;
-    color: #000;
-}
-
-/* 3. Ghế Đã chọn (Selected - User đang click) */
-.seat.selected {
-    background-color: #00ff88 !important;
-    color: #000 !important;
-    box-shadow: 0 0 10px #00ff88;
-}
-
-/* 4. Ghế Đã đặt / Bị khóa (Booked/Locked) */
-.seat.booked, .seat.locked, .seat.disabled {
-    background-color: #b00;
     color: #fff;
-    cursor: not-allowed;
-    opacity: 0.5;
 }
 
-/* --- THANH THANH TOÁN (BOTTOM BAR) --- */
+.seat.selected {
+    background-color: #2ecc71 !important; /* Xanh lá */
+    color: #fff !important;
+    border-color: #2ecc71 !important;
+    box-shadow: 0 0 8px rgba(46, 204, 113, 0.4);
+}
+
+.seat.booked, .seat.locked {
+    background-color: #e74c3c;
+    color: #fff;
+    border-color: #e74c3c;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Booking Bar */
 .booking-bar {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
-    background-color: #222;
-    border-top: 1px solid #444;
+    background-color: #fff;
+    border-top: 1px solid #eee;
     padding: 15px 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     z-index: 100;
-    box-shadow: 0 -5px 15px rgba(0,0,0,0.5);
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
 }
 
 .booking-info p {
     margin: 0;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: bold;
-    color: #fff;
+    color: #333;
 }
 
 .confirm-btn {
     padding: 12px 30px;
     background-color: #fca311;
     border: none;
-    border-radius: 4px;
-    color: #000;
+    border-radius: 6px;
+    color: #fff;
     font-weight: bold;
     font-size: 16px;
     cursor: pointer;
     transition: background 0.3s;
 }
 
-.confirm-btn:hover:not(:disabled) {
+.confirm-btn:hover {
     background-color: #e0920e;
 }
 
 .confirm-btn:disabled {
-    background-color: #555;
+    background-color: #ccc;
     cursor: not-allowed;
-    color: #888;
 }

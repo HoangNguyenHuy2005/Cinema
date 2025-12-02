@@ -1,5 +1,5 @@
 // js/config.js
-const API_BASE_URL = 'http://127.0.0.1:5000/api';
+const API_BASE_URL = 'https://dendrological-zackary-blisteringly.ngrok-free.dev';
 
 async function callAPI(endpoint, method = 'GET', body = null) {
     const token = localStorage.getItem('accessToken');

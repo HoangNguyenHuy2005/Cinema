@@ -6,13 +6,6 @@
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        .btn-edit { background: #f39c12; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; color: white; margin-right: 5px; }
-        .btn-delete { background: #c0392b; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; color: white; }
-        .btn-tiny { background: #27ae60; border: none; width: 20px; height: 20px; border-radius: 50%; color: white; cursor: pointer; font-size: 12px;}
-        .badge { background: #3498db; color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px; margin: 2px; display: inline-block; }
-        .badge i { margin-left: 5px; cursor: pointer; font-size: 10px; }
-    </style>
 </head>
 <body>
 
@@ -23,24 +16,85 @@
                 <li><a href="#" class="nav-link active" data-content="movies"><i class="fa-solid fa-film"></i> Phim</a></li>
                 <li><a href="#" class="nav-link" data-content="showtimes"><i class="fa-solid fa-calendar"></i> Suất chiếu</a></li>
                 <li><a href="#" class="nav-link" data-content="cinemas"><i class="fa-solid fa-building"></i> Rạp & Phòng</a></li>
+                <li><a href="#" class="nav-link" data-content="genres"><i class="fa-solid fa-tags"></i> Thể loại</a></li>
+                <li><a href="#" class="nav-link" data-content="bookings"><i class="fa-solid fa-ticket"></i> Đơn đặt vé</a></li>
+                <li><a href="#" class="nav-link" data-content="users"><i class="fa-solid fa-users"></i> Người dùng</a></li>
                 <li><a href="#" class="logout-btn" onclick="handleLogout()"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a></li>
             </ul>
         </nav>
 
         <div class="main-content">
+            
             <section id="movies" class="content-section active">
-                <div class="section-header"><h2>Phim</h2><button class="add-btn" onclick="openAddMovieModal()">+ Thêm</button></div>
-                <div class="table-responsive"><table class="data-table"><thead><tr><th>ID</th><th>Ảnh</th><th>Tên</th><th>Ngày</th><th>Action</th></tr></thead><tbody id="movie-list-body"></tbody></table></div>
+                <div class="section-header">
+                    <h2>Danh sách Phim</h2>
+                    <button class="add-btn" onclick="openAddMovieModal()">+ Thêm Phim</button>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead><tr><th>ID</th><th>Poster</th><th>Tên Phim</th><th>Thể loại</th><th>Ngày chiếu</th><th>Hành động</th></tr></thead>
+                        <tbody id="movie-list-body"></tbody>
+                    </table>
+                </div>
             </section>
 
             <section id="showtimes" class="content-section">
-                <div class="section-header"><h2>Suất Chiếu</h2><button class="add-btn" onclick="openAddShowtimeModal()">+ Thêm</button></div>
-                <div class="table-responsive"><table class="data-table"><thead><tr><th>ID</th><th>Phim</th><th>Rạp/Phòng</th><th>Giờ</th><th>Giá</th><th>Action</th></tr></thead><tbody id="showtime-list-body"></tbody></table></div>
+                <div class="section-header">
+                    <h2>Suất Chiếu</h2>
+                    <button class="add-btn" onclick="openAddShowtimeModal()">+ Thêm Lịch</button>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead><tr><th>ID</th><th>Phim</th><th>Rạp/Phòng</th><th>Giờ</th><th>Giá</th><th>Hành động</th></tr></thead>
+                        <tbody id="showtime-list-body"></tbody>
+                    </table>
+                </div>
             </section>
 
             <section id="cinemas" class="content-section">
-                <div class="section-header"><h2>Rạp & Phòng</h2><button class="add-btn" onclick="toggleModal('cinema-modal')">+ Thêm Rạp</button></div>
-                <div class="table-responsive"><table class="data-table"><thead><tr><th>ID</th><th>Tên Rạp</th><th>Địa chỉ</th><th>Phòng</th><th>Action</th></tr></thead><tbody id="cinema-list-body"></tbody></table></div>
+                <div class="section-header">
+                    <h2>Rạp & Phòng</h2>
+                    <button class="add-btn" onclick="toggleModal('cinema-modal')">+ Thêm Rạp</button>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead><tr><th>ID</th><th>Logo</th><th>Tên Rạp</th><th>Địa chỉ</th><th>Phòng</th><th>Hành động</th></tr></thead>
+                        <tbody id="cinema-list-body"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="genres" class="content-section">
+                <div class="section-header">
+                    <h2>Thể loại</h2>
+                    <button class="add-btn" onclick="toggleModal('genre-modal')">+ Thêm</button>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table" style="max-width:600px">
+                        <thead><tr><th>ID</th><th>Tên</th><th>Hành động</th></tr></thead>
+                        <tbody id="genre-list-body"></tbody>
+                    </table>
+                </div>
+            </section>
+            
+            <section id="bookings" class="content-section">
+                <div class="section-header"><h2>Quản lý Đơn Đặt Vé</h2></div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead><tr><th>Mã</th><th>Khách</th><th>Phim/Rạp</th><th>Ghế</th><th>Tiền</th><th>TT</th><th>Ngày</th><th>Action</th></tr></thead>
+                        <tbody id="booking-list-body"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="users" class="content-section">
+                <div class="section-header"><h2>Người dùng</h2></div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead><tr><th>ID</th><th>User</th><th>Tên</th><th>Email</th><th>Role</th><th>Action</th></tr></thead>
+                        <tbody id="user-list-body"></tbody>
+                    </table>
+                </div>
             </section>
         </div>
     </div>
@@ -51,58 +105,38 @@
             <form id="movie-form">
                 <input type="hidden" name="id" id="movie-id">
                 <div class="form-group"><label>Tên</label><input type="text" name="name" id="m-name" required></div>
+                
+                <div class="form-group">
+                    <label>Thể loại</label>
+                    <div id="genre-checkboxes"></div>
+                </div>
+
                 <div class="form-group"><label>Đạo diễn</label><input type="text" name="director" id="m-director"></div>
                 <div class="form-group"><label>Diễn viên</label><input type="text" name="casts" id="m-casts"></div>
                 <div class="form-group-row">
                     <div><label>Thời lượng</label><input type="number" name="duration" id="m-duration"></div>
                     <div><label>Ngày chiếu</label><input type="date" name="release_date" id="m-date"></div>
                 </div>
-                <div class="form-group"><label>Poster</label><input type="text" name="poster" id="m-poster"></div>
-                <div class="form-group"><label>Mô tả</label><textarea name="description" id="m-desc" rows="2"></textarea></div>
-                <div class="modal-actions"><button type="button" class="cancel-btn" onclick="toggleModal('movie-modal')">Hủy</button><button type="submit" class="save-btn">Lưu</button></div>
-            </form>
-        </div>
-    </div>
-
-    <div id="showtime-modal" class="modal-overlay hidden">
-        <div class="modal-content admin-form-content">
-            <h3 id="st-modal-title">Thêm Lịch</h3>
-            <form id="add-showtime-form">
-                <input type="hidden" name="id" id="st-id">
-                <div class="form-group"><label>Phim</label><select name="movie_id" id="st-movie-select" required></select></div>
-                <div class="form-group"><label>Phòng</label><select name="room_id" id="st-room-select" required></select></div>
-                <div class="form-group-row">
-                    <div><label>Giờ</label><input type="datetime-local" name="show_time" id="st-time" step="1" required></div>
-                    <div><label>Giá</label><input type="number" name="price" id="st-price" value="75000"></div>
+                <div class="form-group"><label>Poster URL</label><input type="text" name="poster" id="m-poster"></div>
+                <div class="form-group"><label>Mô tả</label><textarea name="description" id="m-desc" rows="3"></textarea></div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="cancel-btn" onclick="toggleModal('movie-modal')">Hủy</button>
+                    <button type="submit" class="save-btn">Lưu</button>
                 </div>
-                <div class="modal-actions"><button type="button" class="cancel-btn" onclick="toggleModal('showtime-modal')">Hủy</button><button type="submit" class="save-btn">Lưu</button></div>
             </form>
         </div>
     </div>
 
-    <div id="cinema-modal" class="modal-overlay hidden">
-        <div class="modal-content admin-form-content">
-            <h3 id="cinema-modal-title">Thêm Rạp</h3>
-            <form id="add-cinema-form">
-                <input type="hidden" name="id" id="cinema-id">
-                <div class="form-group"><label>Tên</label><input type="text" name="name" id="cinema-name" required></div>
-                <div class="form-group"><label>Địa chỉ</label><input type="text" name="address" id="cinema-address"></div>
-                <div class="modal-actions"><button type="button" class="cancel-btn" onclick="toggleModal('cinema-modal')">Hủy</button><button type="submit" class="save-btn">Lưu</button></div>
-            </form>
-        </div>
-    </div>
-
-    <div id="room-modal" class="modal-overlay hidden">
-        <div class="modal-content admin-form-content" style="width:300px">
-            <h3 id="room-modal-title">Thêm Phòng</h3>
-            <form id="add-room-form">
-                <input type="hidden" name="id" id="room-id">
-                <input type="hidden" name="cinema_id" id="room-cinema-id">
-                <div class="form-group"><label>Tên Phòng</label><input type="text" name="name" id="room-name" required></div>
-                <div class="modal-actions"><button type="button" class="cancel-btn" onclick="toggleModal('room-modal')">Hủy</button><button type="submit" class="save-btn">Lưu</button></div>
-            </form>
-        </div>
-    </div>
+    <div id="showtime-modal" class="modal-overlay hidden"><div class="modal-content admin-form-content"><h3 id="st-modal-title">Thêm Lịch</h3><form id="add-showtime-form"><input type="hidden" name="id" id="st-id"><div class="form-group"><label>Phim</label><select name="movie_id" id="st-movie-select" required></select></div><div class="form-group"><label>Phòng</label><select name="room_id" id="st-room-select" required></select></div><div class="form-group-row"><div><label>Giờ</label><input type="datetime-local" name="show_time" id="st-time" step="1" required></div><div><label>Giá</label><input type="number" name="price" id="st-price" value="75000"></div></div><div class="modal-actions"><button type="button" class="cancel-btn" onclick="toggleModal('showtime-modal')">Hủy</button><button type="submit" class="save-btn">Lưu</button></div></form></div></div>
+    
+    <div id="cinema-modal" class="modal-overlay hidden"><div class="modal-content admin-form-content"><h3 id="cinema-modal-title">Thêm Rạp</h3><form id="add-cinema-form"><input type="hidden" name="id" id="cinema-id"><div class="form-group"><label>Tên Rạp</label><input type="text" name="name" id="cinema-name" required></div><div class="form-group"><label>Địa chỉ</label><input type="text" name="address" id="cinema-address"></div><div class="form-group"><label>Logo URL</label><input type="text" name="logo" id="cinema-logo"></div><div class="modal-actions"><button type="button" class="cancel-btn" onclick="toggleModal('cinema-modal')">Hủy</button><button type="submit" class="save-btn">Lưu</button></div></form></div></div>
+    
+    <div id="room-modal" class="modal-overlay hidden"><div class="modal-content admin-form-content" style="width:300px"><h3 id="room-modal-title">Thêm Phòng</h3><form id="add-room-form"><input type="hidden" name="id" id="room-id"><input type="hidden" name="cinema_id" id="room-cinema-id"><div class="form-group"><label>Tên Phòng</label><input type="text" name="name" id="room-name" required></div><div class="modal-actions"><button type="button" class="cancel-btn" onclick="toggleModal('room-modal')">Hủy</button><button type="submit" class="save-btn">Lưu</button></div></form></div></div>
+    
+    <div id="genre-modal" class="modal-overlay hidden"><div class="modal-content admin-form-content" style="width:300px"><h3>Thêm Thể loại</h3><form id="add-genre-form"><div class="form-group"><label>Tên</label><input type="text" name="name" id="genre-name" required></div><div class="modal-actions"><button type="button" class="cancel-btn" onclick="toggleModal('genre-modal')">Hủy</button><button type="submit" class="save-btn">Lưu</button></div></form></div></div>
+    
+    <div id="user-modal" class="modal-overlay hidden"><div class="modal-content admin-form-content" style="width:400px"><h3>Sửa Người Dùng</h3><form id="edit-user-form"><input type="hidden" name="id" id="user-id"><div class="form-group"><label>Tài khoản</label><input type="text" id="u-username" disabled style="background:#eee"></div><div class="form-group"><label>Họ tên</label><input type="text" name="full_name" id="u-fullname"></div><div class="form-group"><label>Email</label><input type="email" name="email" id="u-email"></div><div class="form-group"><label>Vai trò</label><select name="role" id="u-role" style="width:100%"><option value="user">User</option><option value="admin">Admin</option></select></div><div class="modal-actions"><button type="button" class="cancel-btn" onclick="toggleModal('user-modal')">Hủy</button><button type="submit" class="save-btn">Lưu</button></div></form></div></div>
 
     <script src="js/config.js"></script>
     <script src="js/admin.js"></script>

@@ -15,19 +15,22 @@
             <a href="dat-ve.html">Đặt vé</a>
             <a href="lich-chieu.html">Lịch chiếu</a>
             <a href="phim.html">Phim</a>
+            <a href="#" id="rap-modal-trigger">Rạp</a>
         </div>
         <div class="nav-links-center">
-            <a href="index.html">Trang chủ</a>
+            <a href="index.html" class="logo">CINEMA</a>
         </div>
         <div class="search-user">
-            <a href="dang-nhap.html" class="user-icon"><i class="fa-solid fa-user"></i></a>
+            <a href="#" class="user-icon active"><i class="fa-solid fa-user"></i></a>
         </div>
     </header>
 
     <main class="booking-main">
         <div class="container">
             <div class="booking-header">
-                <h2>Vui lòng chọn ghế</h2>
+                <h2 id="movie-title">Đang tải phim...</h2>
+                <p id="cinema-info">Đang tải rạp...</p>
+                <p id="showtime-info" style="color: #fca311; font-weight: bold;"></p>
             </div>
 
             <ul class="legend">
@@ -39,19 +42,21 @@
 
             <div class="screen-container">
                 <div class="screen"></div>
-                <p class="screen-text">Màn hình</p>
+                <p class="screen-text">Màn hình chiếu</p>
             </div>
 
             <div id="seat-map" class="seat-map">
-                </div>
+                <p>Đang tải sơ đồ ghế...</p>
+            </div>
         </div>
     </main>
 
     <div class="booking-bar">
         <div class="booking-info">
-            <p id="booking-summary">Ghế chọn: Chưa có</p>
+            <p id="booking-seats">Ghế: <span style="color:#fca311">Chưa chọn</span></p>
+            <p id="booking-price">Tổng tiền: 0đ</p>
         </div>
-        <button id="confirm-booking-btn" class="confirm-btn" disabled>Xác nhận đặt vé</button>
+        <button id="confirm-booking-btn" class="confirm-btn">Xác nhận đặt vé</button>
     </div>
 
     <script src="js/config.js"></script>

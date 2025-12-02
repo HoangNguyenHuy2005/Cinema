@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông tin cá nhân</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/user-profile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="nav-links">
+            <a href="dat-ve.html">Đặt vé</a>
+            <a href="lich-chieu.html">Lịch chiếu</a>
+            <a href="phim.html">Phim</a>
+            <a href="#" id="rap-modal-trigger">Rạp</a>
+        </div>
+        <div class="nav-links-center">
+            <a href="index.html" class="logo">CINEMA</a>
+        </div>
+        <div class="search-user">
+            <div class="search-bar">
+                <input type="text" placeholder="Tìm tên phim, diễn viên...">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+            <a href="#" class="user-icon active"><i class="fa-solid fa-user"></i></a>
+        </div>
+    </header>
+
+    <main>
+        <div class="profile-container">
+            <div class="profile-sidebar">
+                <div class="avatar-box">
+                    <i class="fa-solid fa-circle-user"></i>
+                    <h3 id="display-name">Loading...</h3>
+                </div>
+                <ul class="profile-menu">
+                    <li><a href="#" class="active" onclick="showTab('info')">Thông tin tài khoản</a></li>
+                    <li><a href="#" onclick="showTab('history')">Lịch sử đặt vé</a></li>
+                    <li><a href="#" onclick="showTab('password')">Đổi mật khẩu</a></li>
+                    <li><a href="#" onclick="handleLogout()" class="logout-link">Đăng xuất</a></li>
+                </ul>
+            </div>
+
+            <div class="profile-content">
+                <div id="tab-info" class="tab-pane">
+                    <h2>Hồ sơ của tôi</h2>
+                    <form id="profile-form">
+                        <div class="form-group">
+                            <label>Tài khoản (Username)</label>
+                            <input type="text" id="p-username" disabled style="background:#f0f0f0; cursor:not-allowed">
+                        </div>
+                        <div class="form-group">
+                            <label>Họ và tên hiển thị</label>
+                            <input type="text" id="p-fullname">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="p-email">
+                        </div>
+                        <button type="submit" class="btn-save">Lưu thay đổi</button>
+                    </form>
+                </div>
+
+                <div id="tab-history" class="tab-pane hidden">
+                    <h2>Lịch sử đặt vé</h2>
+                    <div class="history-list">
+                        <p>Đang tải...</p>
+                    </div>
+                </div>
+
+                <div id="tab-password" class="tab-pane hidden">
+                    <h2>Đổi mật khẩu</h2>
+                    <form id="password-form">
+                        <div class="form-group">
+                            <label>Mật khẩu hiện tại</label>
+                            <input type="password" id="old-pass" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Mật khẩu mới</label>
+                            <input type="password" id="new-pass" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Nhập lại mật khẩu mới</label>
+                            <input type="password" id="confirm-pass" required>
+                        </div>
+                        <button type="submit" class="btn-save">Cập nhật mật khẩu</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="cinema-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="modal-close-btn">&times;</span>
+            <h3>Danh sách Rạp</h3>
+            <ul class="cinema-list-modal"></ul>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/base.js"></script>
+    <script src="js/user-profile.js"></script>
+</body>
+</html>

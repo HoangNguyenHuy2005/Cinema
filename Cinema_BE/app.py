@@ -1,7 +1,5 @@
-
 from flask import Flask, jsonify
 from flask_jwt_extended import JWTManager
-from models import db
 from config import Config
 from auth_routes import auth_bp
 from movie_routes import movie_bp
@@ -9,8 +7,7 @@ from cinema_routes import cinema_bp
 from room_routes import room_bp
 from showtime_routes import showtime_bp
 from booking_routes import booking_bp
-# Thêm các imports này
-from models import db, User, Movie, Cinema, Room, Schedule, Seat, ScheduleSeat
+from models import db, User, Movie, Cinema, Room, Schedule, Seat, ScheduleSeat, Genre
 from werkzeug.security import generate_password_hash
 from datetime import datetime, timedelta 
 from flask_cors import CORS
@@ -31,9 +28,6 @@ app.register_blueprint(cinema_bp, url_prefix='/api/cinemas')
 app.register_blueprint(room_bp, url_prefix='/api/rooms')
 app.register_blueprint(showtime_bp, url_prefix='/api/showtimes')
 app.register_blueprint(booking_bp, url_prefix='/api/bookings')
-
-# ... phần khác giữ nguyên
-
 
 # --- Route test đơn giản ---
 @app.route('/')
@@ -83,9 +77,20 @@ def seed_db():
         )
         db.session.add_all([admin_user, test_user])
         db.session.commit()
+
+        # Genres (MỚI)
+        genres_list = ['Hành động', 'Tình cảm', 'Kinh dị', 'Hài hước', 'Hoạt hình', 'Khoa học viễn tưởng', 'Tâm lý']
+        db_genres = []
+        for g_name in genres_list:
+            g = Genre.query.filter_by(name=g_name).first()
+            if not g:
+                g = Genre(name=g_name)
+                db.session.add(g)
+            db_genres.append(g)
+        db.session.commit()
         
         # --- 2. CINEMA & ROOM ---
-        cinema = Cinema(name='CGV Vincom', address='Quận 1, TPHCM')
+        cinema = Cinema(name='CGV Aeon Hà Đông', address='Hà Nội')
         db.session.add(cinema)
         db.session.commit()
         

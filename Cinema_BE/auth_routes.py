@@ -1,8 +1,6 @@
 from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
-
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, get_jwt
-
 from models import db, User
 
 auth_bp = Blueprint('auth', __name__)
@@ -88,35 +86,112 @@ def list_users():
         "created_at": u.created_at.strftime("%Y-%m-%d %H:%M:%S") if hasattr(u, 'created_at') else None
     } for u in users])
 
-# Quản lý người dùng theo ID (Xóa, Cập nhật Role - Chỉ Admin)
-@auth_bp.route('/users/<int:user_id>', methods=['DELETE', 'PUT'])
+    # --- API MỚI: Lấy thông tin cá nhân ---
+@auth_bp.route('/profile', methods=['GET'])
 @jwt_required()
-def manage_user(user_id):
-    claims = get_jwt() # Lấy claims/dictionary
-    current_username = get_jwt_identity() # Lấy username (là string)
+def get_profile():
+    current_user_name = get_jwt_identity() # Trả về username
+    user = User.query.filter_by(username=current_user_name).first()
+    
+    if not user: return jsonify({"message": "User not found"}), 404
+    
+    return jsonify({
+        "id": user.id,
+        "username": user.username,
+        "full_name": user.full_name,
+        "email": user.email,
+        "role": user.role
+    })
 
-    # Bắt buộc phải là Admin
-    if claims.get("role") != "admin":
-        return jsonify({"message": "Access denied"}), 403
+# --- API MỚI: Cập nhật thông tin ---
+@auth_bp.route('/profile', methods=['PUT'])
+@jwt_required()
+def update_profile():
+    current_user_name = get_jwt_identity()
+    user = User.query.filter_by(username=current_user_name).first()
+    if not user: return jsonify({"message": "User not found"}), 404
 
-    current_user = User.query.filter_by(username=current_username).first()
+    data = request.get_json()
+    if 'full_name' in data: user.full_name = data['full_name']
+    if 'email' in data: user.email = data['email']
+    
+    db.session.commit()
+    return jsonify({"message": "Cập nhật thành công!"})
 
-    user_to_manage = User.query.get(user_id)
-    if not user_to_manage:
-        return jsonify({"message": "User not found"}), 404
+# --- API MỚI: Đổi mật khẩu ---
+@auth_bp.route('/change-password', methods=['POST'])
+@jwt_required()
+def change_password():
+    current_user_name = get_jwt_identity()
+    user = User.query.filter_by(username=current_user_name).first()
+    
+    data = request.get_json()
+    old_pass = data.get('old_password')
+    new_pass = data.get('new_password')
+
+    if not check_password_hash(user.password_hash, old_pass):
+        return jsonify({"message": "Mật khẩu cũ không đúng"}), 400
         
-    # Không cho phép Admin tự xóa hoặc thay đổi vai trò của chính mình (tùy chọn)
-    if user_to_manage.id == current_user.id:
-        return jsonify({"message": "Cannot manage your own account via this endpoint"}), 403
+    if len(new_pass) < 6:
+        return jsonify({"message": "Mật khẩu mới quá ngắn"}), 400
 
-    if request.method == 'DELETE':
-        db.session.delete(user_to_manage)
-        db.session.commit()
-        return jsonify({"message": "User deleted successfully"}), 200
+    user.password_hash = generate_password_hash(new_pass)
+    db.session.commit()
+    return jsonify({"message": "Đổi mật khẩu thành công"})
 
-    elif request.method == 'PUT':
-        data = request.get_json()
-        if 'role' in data:
-            user_to_manage.role = data['role']
+# --- ADMIN: QUẢN LÝ USER (MỚI) ---
+
+@auth_bp.route('/users', methods=['GET'])
+@jwt_required()
+def get_all_users():
+    claims = get_jwt()
+    if claims.get("role") != "admin": return jsonify({"message": "Không có quyền"}), 403
+    
+    users = User.query.all()
+    return jsonify([{
+        "id": u.id,
+        "username": u.username,
+        "full_name": u.full_name,
+        "email": u.email,
+        "role": u.role
+    } for u in users])
+
+@auth_bp.route('/users/<int:id>', methods=['PUT'])
+@jwt_required()
+def update_user_role(id):
+    claims = get_jwt()
+    if claims.get("role") != "admin": return jsonify({"message": "Không có quyền"}), 403
+    
+    user = User.query.get(id)
+    if not user: return jsonify({"message": "User not found"}), 404
+    
+    data = request.get_json()
+    if 'role' in data: user.role = data['role']
+    # Admin có thể sửa các thông tin khác nếu cần
+    if 'full_name' in data: user.full_name = data['full_name']
+    if 'email' in data: user.email = data['email']
+
+    db.session.commit()
+    return jsonify({"message": "Cập nhật user thành công"})
+
+@auth_bp.route('/users/<int:id>', methods=['DELETE'])
+@jwt_required()
+def delete_user(id):
+    claims = get_jwt()
+    if claims.get("role") != "admin": return jsonify({"message": "Không có quyền"}), 403
+    
+    user = User.query.get(id)
+    if not user: return jsonify({"message": "User not found"}), 404
+    
+    # Chặn admin tự xóa mình
+    current_user = get_jwt_identity()
+    if user.username == current_user:
+        return jsonify({"message": "Không thể tự xóa tài khoản đang đăng nhập!"}), 400
+
+    try:
+        db.session.delete(user)
         db.session.commit()
-        return jsonify({"message": "User updated successfully"}), 200
+        return jsonify({"message": "Đã xóa user"}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": "Không thể xóa (có thể user đang có vé đặt): " + str(e)}), 500

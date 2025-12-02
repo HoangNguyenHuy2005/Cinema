@@ -181,23 +181,69 @@ def cancel_booking(booking_id):
 @jwt_required()
 def booking_history():
     identity = get_jwt_identity()
+    # Xử lý identity (có thể là string username hoặc dict tùy config)
     username = identity if isinstance(identity, str) else identity.get("username")
     
     user_obj = User.query.filter_by(username=username).first()
     if not user_obj:
         return jsonify({"message": "User not found"}), 404
         
+    # Lấy booking của user
     bookings = Booking.query.filter_by(user_id=user_obj.id).order_by(Booking.created_at.desc()).all()
+    
     res = []
     for b in bookings:
         seat_codes = [t.seat.seat_code for t in b.tickets]
+        
+        # Lấy thông tin rạp/phòng từ schedule
+        schedule = b.schedule
+        room_name = schedule.room.name if schedule.room else "Unknown Room"
+        cinema_name = schedule.room.cinema.name if (schedule.room and schedule.room.cinema) else "Unknown Cinema"
+        
         res.append({
             "id": b.id,
-            "schedule_id": b.schedule_id,
-            "movie_name": b.schedule.movie.name,
+            "movie_name": schedule.movie.name,
+            "poster": schedule.movie.poster, # Thêm poster nếu muốn hiện ảnh
+            "cinema_name": cinema_name,      # <--- Thêm cái này
+            "room_name": room_name,          # <--- Thêm cái này
+            "show_time": schedule.show_time.strftime("%H:%M %d/%m/%Y"),
             "seats": seat_codes,
             "total_price": b.total_price,
             "status": b.status,
             "created_at": b.created_at.strftime("%Y-%m-%d %H:%M:%S")
+        })
+    return jsonify(res)
+
+@booking_bp.route('/all', methods=['GET'])
+@jwt_required()
+def get_all_bookings():
+    claims = get_jwt()
+    if claims.get("role") != "admin": return jsonify({"message": "Denied"}), 403
+
+    # Lấy tất cả booking, sắp xếp mới nhất
+    bookings = Booking.query.order_by(Booking.created_at.desc()).all()
+    
+    res = []
+    for b in bookings:
+        seat_codes = [t.seat.seat_code for t in b.tickets]
+        schedule = b.schedule
+        
+        # Xử lý null safety
+        movie_name = schedule.movie.name if schedule.movie else "Deleted Movie"
+        room_name = schedule.room.name if schedule.room else "Unknown Room"
+        cinema_name = schedule.room.cinema.name if (schedule.room and schedule.room.cinema) else "Unknown Cinema"
+
+        res.append({
+            "id": b.id,
+            "user_id": b.user_id,
+            "username": b.user.username if b.user else "Deleted User",
+            "movie_name": movie_name,
+            "cinema_name": cinema_name,
+            "room_name": room_name,
+            "show_time": schedule.show_time.strftime("%H:%M %d/%m/%Y"),
+            "seats": seat_codes,
+            "total_price": b.total_price,
+            "status": b.status,
+            "created_at": b.created_at.strftime("%Y-%m-%d %H:%M")
         })
     return jsonify(res)

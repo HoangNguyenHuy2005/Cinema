@@ -32,38 +32,34 @@
     </header>
 
     <main>
-        <section class="all-movies">
-            <h2>Tất cả Phim</h2>
-            <div class="filters">
-                <div class="filter-group">
-                    <label for="genre-filter">Lọc theo thể loại:</label>
-                    <select id="genre-filter" name="genre">
-                        <option value="all">Tất cả thể loại</option>
-                        <option value="Hành động">Hành động</option>
-                        <option value="Tình cảm">Tình cảm</option>
-                        <option value="Kinh dị">Kinh dị</option>
-                    </select>
+    <section class="movie-listing">
+        <div class="container">
+            <h2>Tất cả phim</h2>
+            
+            <div class="filter-bar">
+                <div class="filter-item">
+                    <label for="genre-filter">Thể loại</label>
+                    <select id="genre-filter">
+                        <option value="">Tất cả thể loại</option>
+                        </select>
                 </div>
-                <div class="filter-group">
-                    <label for="date-filter">Lọc theo ngày chiếu:</label>
-                    <input type="date" id="date-filter" name="date">
+                <div class="filter-item">
+                    <label for="date-filter">Ngày chiếu</label>
+                    <input type="date" id="date-filter">
                 </div>
             </div>
 
-            <div class="movie-grid"></div>
-        </section>
+            <div class="movie-grid">
+                </div>
+        </div>
+    </section>
     </main>
 
     <div id="cinema-modal" class="modal-overlay hidden">
         <div class="modal-content">
             <button class="modal-close-btn">&times;</button>
-            <div class="modal-body">
-                <ul class="cinema-list-modal">
-                    <li>
-                        <div class="cinema-details"><h4>Beta Quang Trung</h4><p class="address">HCM</p></div>
-                    </li>
-                </ul>
-            </div>
+            <h3 style="text-align:center; margin-top:0; color:#333">Chọn Rạp Phim</h3>
+            <ul class="cinema-list-modal"></ul>
         </div>
     </div>
 

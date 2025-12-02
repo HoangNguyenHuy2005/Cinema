@@ -9,7 +9,7 @@ class Config:
     user = os.getenv("DB_USER", "root")
     password = os.getenv("DB_PASSWORD", "princesama2005") # Fallback nếu quên chỉnh env
     host = os.getenv("DB_HOST", "localhost")
-    database = os.getenv("DB_NAME", "movieDB")
+    database = os.getenv("DB_NAME", "moviedb1")
 
     # Ghép lại thành chuỗi kết nối hoàn chỉnh
     SQLALCHEMY_DATABASE_URI = (

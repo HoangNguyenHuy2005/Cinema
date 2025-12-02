@@ -1,3 +1,5 @@
+// Cinema_FE/js/dat-ve.js
+
 document.addEventListener('DOMContentLoaded', () => {
     loadMoviesForBooking();
     loadBookingData();
@@ -17,19 +19,18 @@ function renderBookingSlider(movies) {
     container.innerHTML = '';
 
     movies.forEach(movie => {
-        const poster = movie.poster || 'https://via.placeholder.com/180x270';
-        // Giả sử backend trả về movie.id (chữ thường) hoặc MovieID (chữ hoa) tùy model
-        // Ta dùng cú pháp an toàn:
+        const poster = movie.poster || movie.PosterURL || 'https://via.placeholder.com/180x270';
         const id = movie.id || movie.MovieID; 
         const name = movie.name || movie.Name;
         const dateStr = movie.release_date || movie.ReleaseDate;
+        const releaseDate = dateStr ? new Date(dateStr).toLocaleDateString('vi-VN') : 'Sắp chiếu';
 
         const html = `
             <div class="movie-card">
                 <div class="poster-img"><img src="${poster}" alt="${name}"></div>
                 <div class="movie-info">
                     <h3>${name}</h3>
-                    <p class="release-date">${new Date(dateStr).toLocaleDateString('vi-VN')}</p>
+                    <p class="release-date">${releaseDate}</p>
                 </div>
                 <a href="dat-ve.html?movieId=${id}" class="buy-ticket-btn">Mua vé</a>
             </div>
@@ -38,13 +39,12 @@ function renderBookingSlider(movies) {
     });
 }
 
-
 // --- PHẦN 2: MUA VÉ THEO RẠP (3 CỘT) ---
 let allCinemas = [];
 let allShowtimes = [];
+let activeDate = new Date().toISOString().split('T')[0]; // Ngày đang chọn
 
 async function loadBookingData() {
-    // Sửa endpoint đúng với backend: /cinemas
     const [cinemasRes, showtimesRes] = await Promise.all([
         callAPI('/cinemas', 'GET'),  
         callAPI('/showtimes', 'GET')  
@@ -54,6 +54,45 @@ async function loadBookingData() {
     if (showtimesRes.ok) allShowtimes = showtimesRes.data;
 
     renderAreas();
+    renderDatePicker();
+}
+
+function renderDatePicker() {
+    const container = document.querySelector('.date-picker ul');
+    if (!container) return;
+    container.innerHTML = '';
+
+    for (let i = 0; i < 7; i++) {
+        const d = new Date();
+        d.setDate(d.getDate() + i);
+        
+        const dateStr = d.toISOString().split('T')[0];
+        const dayNum = d.getDate();
+        const monthNum = d.getMonth() + 1;
+        const days = ['CN', 'Th 2', 'Th 3', 'Th 4', 'Th 5', 'Th 6', 'Th 7'];
+        const dayName = i === 0 ? 'Hôm nay' : days[d.getDay()];
+
+        const li = document.createElement('li');
+        li.innerHTML = `
+            <a href="#" class="date-link ${i === 0 ? 'active' : ''}" data-date="${dateStr}">
+                <span>${dayNum}/${monthNum}</span>
+                <span>${dayName}</span>
+            </a>
+        `;
+        
+        li.querySelector('a').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.querySelectorAll('.date-link').forEach(el => el.classList.remove('active'));
+            e.currentTarget.classList.add('active');
+            activeDate = dateStr;
+            
+            const activeCinema = document.querySelector('.cinema-link.active');
+            if (activeCinema) {
+                renderShowtimes(activeCinema.dataset.id);
+            }
+        });
+        container.appendChild(li);
+    }
 }
 
 function renderAreas() {
@@ -61,7 +100,6 @@ function renderAreas() {
     if (!areaList) return;
     areaList.innerHTML = '';
 
-    // Lọc ra danh sách thành phố duy nhất
     const cities = [...new Set(allCinemas.map(c => extractCity(c.address)))];
 
     cities.forEach((city, index) => {
@@ -89,13 +127,12 @@ function renderCinemasByCity(city) {
 
     cinemas.forEach((cinema, index) => {
         const li = document.createElement('li');
-        li.innerHTML = `<a href="#" class="cinema-link ${index === 0 ? 'active' : ''}">${cinema.name}</a>`;
+        li.innerHTML = `<a href="#" class="cinema-link ${index === 0 ? 'active' : ''}" data-id="${cinema.id}">${cinema.name}</a>`;
         
         li.querySelector('a').addEventListener('click', (e) => {
             e.preventDefault();
             document.querySelectorAll('.cinema-link').forEach(el => el.classList.remove('active'));
             e.target.classList.add('active');
-            
             renderShowtimes(cinema.id);
         });
         cinemaList.appendChild(li);
@@ -104,73 +141,59 @@ function renderCinemasByCity(city) {
     if (cinemas.length > 0) renderShowtimes(cinemas[0].id);
 }
 
+// --- HÀM RENDER ĐÃ ĐƯỢC CHỈNH SỬA ---
 function renderShowtimes(cinemaID) {
     const container = document.querySelector('.showtime-listing');
-    const datePicker = document.querySelector('.date-picker ul');
-    
     if (!container) return;
-    
-    // 1. Date Picker
-    if (datePicker) {
-        datePicker.innerHTML = '';
-        for(let i=0; i<7; i++) {
-            const d = new Date();
-            d.setDate(d.getDate() + i);
-            const dayStr = `${d.getDate()}/${d.getMonth()+1}`;
-            const dayName = i === 0 ? 'Hôm nay' : `Th ${d.getDay() + 2}`; // Thứ 2 = day 1
-
-            datePicker.innerHTML += `
-                <li><a href="#" class="date-link ${i===0?'active':''}">
-                    <span>${dayStr}</span><span>${dayName}</span>
-                </a></li>`;
-        }
-    }
-
-    // 2. Render Suất chiếu
     container.innerHTML = '';
-    
-    // Lọc showtime theo cinema_id. 
-    // Backend phải trả về nested object 'room' hoặc 'cinema_id'
-    // Ví dụ backend trả về: {id, room: {id, cinema_id, ...}, ...}
+
     const showtimes = allShowtimes.filter(s => {
-        // Kiểm tra an toàn để tránh lỗi undefined
-        if (s.room && s.room.cinema_id) {
-            return s.room.cinema_id == cinemaID;
-        }
-        return false;
+        let cId = s.cinema_id;
+        if (!cId && s.room) cId = s.room.cinema_id;
+        const sDate = s.show_time.split(' ')[0];
+        return cId == cinemaID && sDate === activeDate;
     });
 
     if (showtimes.length === 0) {
-        container.innerHTML = '<p style="padding:10px">Không có suất chiếu nào.</p>';
+        container.innerHTML = '<p style="padding:20px; color:#666">Không có suất chiếu nào vào ngày này.</p>';
         return;
     }
 
-    // Gom nhóm theo tên phim
     const moviesInTheater = {}; 
     showtimes.forEach(s => {
-        const mName = s.movie ? s.movie.name : "Unknown Movie";
+        const mName = s.movie_name || (s.movie ? s.movie.name : "Unknown");
+        const mPoster = s.movie_poster || (s.movie ? s.movie.poster : "") || 'https://via.placeholder.com/100x150';
+        
         if (!moviesInTheater[mName]) {
-            moviesInTheater[mName] = { name: mName, times: [] };
+            moviesInTheater[mName] = { name: mName, poster: mPoster, times: [] };
         }
         moviesInTheater[mName].times.push(s);
     });
 
-    // Tạo HTML
     Object.values(moviesInTheater).forEach(movie => {
         const timeHtml = movie.times.map(s => {
-            const time = new Date(s.show_time).toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'});
-            // Nút giờ chiếu gọi hàm bookTicket với schedule ID
-            return `<a href="#" class="time-slot" onclick="bookTicket(${s.id})">${time}</a>`;
+            const d = new Date(s.show_time);
+            const timeStr = d.toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'});
+            const price = s.price_standard ? s.price_standard.toLocaleString() : '0';
+            
+            return `<a href="chon-ghe.html?showtimeId=${s.id}" class="time-slot">
+                        <span class="time-text">${timeStr}</span>
+                        <span class="price-sub">${price}đ</span>
+                    </a>`;
         }).join('');
 
         const html = `
             <div class="movie-showtime-item">
-                <div class="movie-details">
-                    <span class="tag-rate">T16</span>
-                    <h4>${movie.name}</h4>
+                <div class="poster">
+                    <img src="${movie.poster}" alt="${movie.name}">
                 </div>
-                <p class="movie-specs">2D Phụ đề</p>
-                <div class="times">${timeHtml}</div>
+                <div class="movie-details">
+                    <h4>${movie.name}</h4>
+                    <p class="movie-specs">2D Phụ đề</p>
+                    <div class="times">
+                        ${timeHtml}
+                    </div>
+                </div>
             </div>
         `;
         container.innerHTML += html;
@@ -184,7 +207,6 @@ function bookTicket(showtimeId) {
         window.location.href = "dang-nhap.html";
         return;
     }
-    // Chuyển sang trang chọn ghế
     window.location.href = `chon-ghe.html?showtimeId=${showtimeId}`;
 }
 

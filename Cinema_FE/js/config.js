@@ -1,9 +1,12 @@
 // js/config.js
-const API_BASE_URL = 'https://dendrological-zackary-blisteringly.ngrok-free.dev';
+const API_BASE_URL = 'http://127.0.0.1:5000/api';
 
 async function callAPI(endpoint, method = 'GET', body = null) {
     const token = localStorage.getItem('accessToken');
-    const headers = { 'Content-Type': 'application/json' };
+const headers = {
+        'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': 'true' 
+    };
     if (token) headers['Authorization'] = `Bearer ${token}`;
 
     const options = { method, headers };

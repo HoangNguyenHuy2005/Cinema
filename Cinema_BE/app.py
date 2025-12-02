@@ -14,8 +14,13 @@ from flask_cors import CORS
 # Note: Cần thêm 'db' vào import list nếu chưa có.
 
 app = Flask(__name__)
-CORS(app)
 app.config.from_object(Config)
+
+CORS(app, 
+     resources={r"/*": {"origins": "*"}}, 
+     supports_credentials=True,
+     allow_headers=["Content-Type", "Authorization", "ngrok-skip-browser-warning", "X-Custom-Header"]
+)
 
 # Khởi tạo DB và JWT
 db.init_app(app)
